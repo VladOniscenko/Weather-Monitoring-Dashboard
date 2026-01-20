@@ -1,8 +1,8 @@
 services:
   # database
-  db:
+  database:
     image: postgres
-    container_name: weather_db
+    container_name: database
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -15,32 +15,32 @@ services:
       - weather-network
 
   # server / api
-  api:
+  server:
     build: 
-      context: ./backend
+      context: ./server
       dockerfile: Dockerfile
-    container_name: weather_api
+    container_name: server
     environment:
-      - ConnectionStrings__DefaultConnection=Host=db;Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - ConnectionStrings__DefaultConnection=Host=database;Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - JwtSettings__Secret=${JWT_SECRET}
     ports:
       - "5001:8080"
     depends_on:
-      - db
+      - database
     networks:
       - weather-network
 
   # frontend
-  web:
+  client:
     build:
-      context: ./frontend
+      context: ./client
       dockerfile: Dockerfile
-    container_name: weather_web
+    container_name: client
     ports:
       - "3000:80"
     depends_on:
-      - api
+      - server
     networks:
       - weather-network
 
