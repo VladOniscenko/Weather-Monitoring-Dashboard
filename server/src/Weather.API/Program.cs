@@ -1,25 +1,57 @@
+using Weather.Application;
+using Weather.Infrastructure;
+using Weather.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Add services to the container.
-// In a real app, you would do: builder.Services.AddInfrastructure(builder.Configuration);
-// and: builder.Services.AddApplication();
+// --- REGISTRATION PHASE ---
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddSwaggerWithAuth();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// Configure CORS for Next.js
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowNextJs",
-        policy => policy.WithOrigins("http://localhost:3000") // Your Frontend URL
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-});
+builder.Services.AddControllers()
+    .AddJsonOptions(options => {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 var app = builder.Build();
 
-// 2. Configure the HTTP request pipeline.
+// --- EXECUTION PHASE ---
+
+// 1. Automatic Migration Logic
+// --- EXECUTION PHASE ---
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    var context = services.GetRequiredService<AppDbContext>();
+
+    // Attempt to migrate 10 times with a 3-second delay
+    for (int i = 0; i < 10; i++)
+    {
+        try
+        {
+            logger.LogInformation("Database Automation: Checking migrations (Attempt {Attempt}/10)", i + 1);
+            if ((await context.Database.GetPendingMigrationsAsync()).Any())
+            {
+                logger.LogInformation("Database Automation: Found pending migrations. Applying...");
+                await context.Database.MigrateAsync();
+                logger.LogInformation("Database Automation: Migration successful.");
+            }
+            break; // Exit loop on success
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Database Automation: Postgres not ready yet. Retrying in 3s...");
+            await Task.Delay(3000); 
+            if (i == 9) throw new Exception("Database Automation: Failed to migrate after 10 attempts.", ex);
+        }
+    }
+}
+
+// 2. Middleware Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -27,11 +59,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseCors("AllowNextJs"); // Activate CORS
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
