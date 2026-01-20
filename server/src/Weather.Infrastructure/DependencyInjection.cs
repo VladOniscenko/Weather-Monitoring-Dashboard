@@ -6,6 +6,7 @@ using System.Text;
 using Weather.Application.Common.Interfaces;
 using Weather.Infrastructure.Persistence;
 using Weather.Infrastructure.Repositories;
+using Weather.Infrastructure.Identity;
 using Weather.Infrastructure.Services;
 using Weather.Domain.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,7 @@ public static class DependencyInjection
 
         // Services
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         return services;
     }

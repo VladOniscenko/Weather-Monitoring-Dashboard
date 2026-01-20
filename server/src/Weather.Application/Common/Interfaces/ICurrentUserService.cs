@@ -2,6 +2,6 @@ namespace Weather.Application.Common.Interfaces;
 
 public interface ICurrentUserService
 {
-    string? UserId { get; }
+    Guid Id { get; }
     bool IsAuthenticated { get; }
 }

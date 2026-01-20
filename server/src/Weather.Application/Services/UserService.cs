@@ -11,11 +11,13 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _context;
     private readonly ITokenService _tokenService;
+    private readonly ICurrentUserService _currentUser;
 
-    public UserService(IUserRepository context, ITokenService tokenService)
+    public UserService(IUserRepository context, ITokenService tokenService, ICurrentUserService currentUser)
     {
         _context = context;
         _tokenService = tokenService;
+        _currentUser = currentUser;
     }
 
 
@@ -50,11 +52,11 @@ public class UserService : IUserService
 
 
 
-    public async Task<UserDto> UpdateProfileAsync(Guid userId, UserUpdateRequestDto request)
+    public async Task<UserDto> UpdateProfileAsync(UserUpdateRequestDto request)
     {
         // Find user by its id
-        var user = await _context.FindOneAsync(u => u.Id == userId)
-            ?? throw new KeyNotFoundException($"User with ID {userId} not found.");
+        var user = await _context.FindOneAsync(u => u.Id == _currentUser.Id)
+            ?? throw new KeyNotFoundException($"User with ID {_currentUser.Id} not found.");
 
         // validate if name is not empty
         if (!string.IsNullOrEmpty(request.Name))
@@ -132,6 +134,13 @@ public class UserService : IUserService
         }
 
         return user.ToDto();
+    }
+
+
+
+    public async Task<UserDto> GetMeAsync()
+    {
+        return await GetByIdAsync(_currentUser.Id);
     }
 
 

@@ -62,7 +62,7 @@ public class UsersController : BaseController
     {
         try
         {
-            var user = await _userService.GetByIdAsync(CurrentUserId);
+            var user = await _userService.GetMeAsync();
             return Ok(user);
         }
         catch (Exception ex)
@@ -79,7 +79,7 @@ public class UsersController : BaseController
     {
         try
         {
-            var updatedUser = await _userService.UpdateProfileAsync(CurrentUserId, request);
+            var updatedUser = await _userService.UpdateProfileAsync(request);
             return Ok(updatedUser);
         }
         catch (Exception ex) when (ex is InvalidOperationException or ArgumentException)
@@ -89,6 +89,24 @@ public class UsersController : BaseController
         catch (KeyNotFoundException)
         {
             return NotFound();
+        }
+    }
+
+
+
+    [HttpGet("{Id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetUser(Guid Id)
+    {
+        try
+        {
+            var user = await _userService.GetByIdAsync(Id);
+            return Ok(user);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return BadRequest(new { message = "An error occurred during fetching user." });
         }
     }
 
