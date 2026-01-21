@@ -1,6 +1,6 @@
 using Weather.Domain.Entities;
 using Weather.Application.Common.Interfaces;
-using Weather.Domain.DTOs;
+using Weather.Application.Common.DTOs;
 using Weather.Domain.Common.Validators;
 using Weather.Infrastructure.Mappers;
 

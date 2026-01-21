@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Linq.Expressions;
 using Weather.Domain.Entities;
 using Weather.Application.Common.Interfaces;
+using Weather.Application.Common.DTOs;
 
 namespace Weather.Application.Services;
 

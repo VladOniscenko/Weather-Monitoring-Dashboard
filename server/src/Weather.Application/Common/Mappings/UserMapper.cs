@@ -1,5 +1,5 @@
 namespace Weather.Infrastructure.Mappers;
-using Weather.Domain.DTOs;
+using Weather.Application.Common.DTOs;
 using Weather.Domain.Entities;
 
 public static class UserMapper

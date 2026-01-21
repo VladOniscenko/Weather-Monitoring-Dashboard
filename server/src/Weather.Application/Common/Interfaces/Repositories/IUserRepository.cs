@@ -1,5 +1,5 @@
 using Weather.Domain.Entities;
-using Weather.Domain.DTOs;
+using Weather.Application.Common.DTOs;
 
 namespace Weather.Application.Common.Interfaces;
 
