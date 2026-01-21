@@ -1,34 +1,27 @@
 using System.Net;
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
+using Weather.Application.Common.Models;
 
 namespace Weather.API.Middleware;
 
-public class GlobalExceptionMiddleware
+public class GlobalExceptionMiddleware : IMiddleware
 {
-    private readonly RequestDelegate _next;
     private readonly ILogger<GlobalExceptionMiddleware> _logger;
 
-    public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
+    public GlobalExceptionMiddleware(ILogger<GlobalExceptionMiddleware> logger)
     {
-        _next = next;
         _logger = logger;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
         {
-            await _next(context);
+            await next(context);
         }
         catch (Exception ex)
         {
-            // Log to console
-            Console.WriteLine("Unhandled Exception: " + ex);
-
-            // Log using ILogger
-            _logger.LogError(ex, "An unhandled exception occurred.");
-
+            _logger.LogError(ex, "An error occurred while processing the request.");
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -36,17 +29,37 @@ public class GlobalExceptionMiddleware
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-        var problem = new ProblemDetails
+        var statusCode = (int)HttpStatusCode.InternalServerError;
+        var message = "An internal error occurred.";
+        
+        switch (exception)
         {
-            Status = context.Response.StatusCode,
-            Title = "Internal Server Error",
-            Detail = exception.Message // show exception in response
-        };
+            // 401 Unauthorized
+            case UnauthorizedAccessException: 
+                statusCode = (int)HttpStatusCode.Unauthorized;
+                message = exception.Message;
+                break;
 
-        Console.WriteLine("Exception Detail: " + exception); // also log to console
+            // 404 Not Found
+            case KeyNotFoundException:
+                statusCode = (int)HttpStatusCode.NotFound;
+                message = "The requested resource was not found.";
+                break;
 
-        return context.Response.WriteAsync(JsonSerializer.Serialize(problem));
+            // 400 Bad Request
+            case ArgumentException:
+            case InvalidOperationException:
+                statusCode = (int)HttpStatusCode.BadRequest;
+                message = exception.Message;
+                break;
+        }
+
+        context.Response.StatusCode = statusCode;
+
+        // Wrap the error in your standard ApiResponse format
+        var response = ApiResponse<object>.FailureResponse(message);
+        
+        return context.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 }
