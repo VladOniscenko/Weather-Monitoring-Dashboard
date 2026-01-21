@@ -12,13 +12,9 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<CityService>(); 
         
-        // If you use MediatR or FluentValidation, register them here
-        // services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
-
         services.AddScoped<IUserService, UserService>();
         services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
         services.AddScoped<CityService>();
-
         return services;
     }
 }

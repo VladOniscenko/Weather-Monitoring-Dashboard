@@ -3,6 +3,7 @@ using Weather.Infrastructure;
 using Weather.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Weather.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSwaggerWithAuth();
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<GlobalExceptionMiddleware>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options => {
@@ -64,5 +66,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.Run();

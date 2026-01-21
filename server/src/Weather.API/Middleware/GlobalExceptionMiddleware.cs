@@ -2,7 +2,7 @@ using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Weather.Api.Middleware;
+namespace Weather.API.Middleware;
 
 public class GlobalExceptionMiddleware
 {
