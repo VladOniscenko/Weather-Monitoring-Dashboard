@@ -26,21 +26,18 @@ public class UserService : IUserService
     {
         // validate email
         if (!EmailValidator.IsValidEmail(request.Email))
-        {
             throw new ArgumentException("Invalid email.");
-        }
 
         // check if email not taken
         var exists = await _context.AnyAsync(u => u.Email == request.Email);
         if (exists) throw new Exception("User already exists.");
 
         // create user
-        var user = new User
-        {
-            Email = request.Email,
-            Name = request.Name,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
-        };
+        var user = new User(
+            request.Email,
+            request.Name,
+            BCrypt.Net.BCrypt.HashPassword(request.Password)
+        );
 
         // save user
         await _context.AddAsync(user);
@@ -58,31 +55,27 @@ public class UserService : IUserService
         var user = await _context.FindOneAsync(u => u.Id == _currentUser.Id)
             ?? throw new KeyNotFoundException($"User with ID {_currentUser.Id} not found.");
 
-        // validate if name is not empty
-        if (!string.IsNullOrEmpty(request.Name))
-        {
-            user.Name = request.Name;
-        }
+        string finalName = !string.IsNullOrEmpty(request.Name)
+            ? request.Name
+            : user.Name;
+
+        string finalEmail = user.Email;
 
         // validate if email is not empty
-        if (!string.IsNullOrEmpty(request.Email))
+        if (!string.IsNullOrEmpty(request.Email) && request.Email != user.Email)
         {
             // validate email
             if (!EmailValidator.IsValidEmail(request.Email))
-            {
                 throw new ArgumentException("Invalid email.");
-            }
 
-            // check if email not taken
             var exists = await _context.AnyAsync(u => u.Email == request.Email);
             if (exists)
-            {
                 throw new Exception("Email already in use.");
-            }
 
-            user.Email = request.Email;
+            finalEmail = request.Email;
         }
-
+        
+        user.UpdateDetails(finalName, finalEmail);
 
         // save it
         await _context.UpdateAsync(user);
