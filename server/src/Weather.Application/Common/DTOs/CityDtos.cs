@@ -1,3 +1,5 @@
+namespace Weather.Application.Common.DTOs;
+
 public class CityQuery
 {
     public string? Name { get; init; }
@@ -13,3 +15,18 @@ public class CityQuery
     }
     private readonly int _pageSize = 20;
 }
+
+public record CreateCityRequest(
+    Guid CountryId,
+    string Name,
+    double Latitude,
+    double Longitude,
+    long Population,
+    string Timezone
+);
+
+public record UpdateCityRequest(
+    string Name,
+    long Population,
+    string Timezone
+);

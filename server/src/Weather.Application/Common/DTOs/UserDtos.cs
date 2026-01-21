@@ -1,6 +1,6 @@
 using Weather.Domain.Enums;
 
-namespace Weather.Domain.DTOs;
+namespace Weather.Application.Common.DTOs;
 
 public record UserRegisterRequestDto(
     string Name,
