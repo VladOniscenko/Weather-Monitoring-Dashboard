@@ -1,18 +1,31 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Weather.Domain.Entities;
 
 public class City : BaseEntity
 {
-    public Guid CountryId { get; set; }
+    public Guid CountryId { get; private set; }
+    public virtual Country? Country { get; private set; } // "virtual" allows EF Core to lazy load
 
-    [MaxLength(100)]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; private set; }
+    public double Latitude { get; private set; }
+    public double Longitude { get; private set; }
+    public long Population { get; private set; }
+    public string Timezone { get; private set; }
 
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
-    public long Population { get; set; }
+    public City(Guid countryId, string name, double latitude, double longitude, string timezone)
+    {
+        if (countryId == Guid.Empty) throw new ArgumentException("City must belong to a country.");
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("City Name is required.");
+        
+        // Validate Coordinates
+        if (latitude < -90 || latitude > 90) throw new ArgumentException("Invalid Latitude.");
+        if (longitude < -180 || longitude > 180) throw new ArgumentException("Invalid Longitude.");
 
-    [MaxLength(50)]
-    public string Timezone { get; set; } = string.Empty;
+        CountryId = countryId;
+        Name = name;
+        Latitude = latitude;
+        Longitude = longitude;
+        Timezone = timezone;
+    }
+
+    protected City() { } // for EF
 }

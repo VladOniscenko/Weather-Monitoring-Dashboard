@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Weather.Domain.Entities;
 using Weather.Application.Services;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Weather.Api.Controllers;
 
@@ -48,9 +50,13 @@ public class CitiesController : BaseController
             await _service.CreateAsync(city);
             return CreatedAtAction(nameof(GetById), new { id = city.Id }, city);
         }
-        catch
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
         {
-            return StatusCode(500, "An error occurred while creating the city.");
+            return Conflict(new { message = "A country with the same unique value already exists." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = ex.Message });
         }
     }
 
@@ -67,6 +73,10 @@ public class CitiesController : BaseController
         {
             await _service.UpdateAsync(city);
             return NoContent();
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
+        {
+            return Conflict(new { message = "A country with the same unique value already exists." });
         }
         catch (Exception ex)
         {
