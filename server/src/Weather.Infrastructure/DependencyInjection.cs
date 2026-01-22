@@ -56,6 +56,9 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
+        // Background workers
+        services.AddHostedService<WeatherDataFetcher>();
+
         return services;
     }
 }
