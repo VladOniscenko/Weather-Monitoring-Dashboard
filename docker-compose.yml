@@ -24,6 +24,7 @@ services:
       - ConnectionStrings__DefaultConnection=Host=database;Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - JwtSettings__Secret=${JWT_SECRET}
+      - WeatherApi__Key=${OPEN_WEATHET_API_KEY}
     ports:
       - "5001:8080"
     depends_on:
