@@ -21,8 +21,6 @@ public class WeatherReading : BaseEntity
     public int SeaLevel { get; private set; }
     public int GroundLevel { get; private set; }
     public int Visibility { get; private set; }
-    public double Min { get; private set; }
-    public double Max { get; private set; }
 
     // Wind
     public double WindSpeed { get; private set; }

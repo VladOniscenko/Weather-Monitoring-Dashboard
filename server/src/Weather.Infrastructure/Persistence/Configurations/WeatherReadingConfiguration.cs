@@ -26,10 +26,10 @@ public class WeatherReadingConfiguration : IEntityTypeConfiguration<WeatherReadi
         entity.Property(wr => wr.FeelsLike)
             .HasPrecision(9, 6);
 
-        entity.Property(wr => wr.Min)
+        entity.Property(wr => wr.MinTemp)
             .HasPrecision(9, 6);
 
-        entity.Property(wr => wr.Max)
+        entity.Property(wr => wr.MaxTemp)
             .HasPrecision(9, 6);
 
         entity.Property(wr => wr.Pressure)

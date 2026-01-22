@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Weather.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Weather.Infrastructure.Persistence;
 namespace Weather.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260122195713_AddFullWeatherDetails")]
+    partial class AddFullWeatherDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,12 +260,18 @@ namespace Weather.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<double>("Max")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("double precision");
+
                     b.Property<double>("MaxTemp")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Min")
                         .HasPrecision(9, 6)
                         .HasColumnType("double precision");
 
                     b.Property<double>("MinTemp")
-                        .HasPrecision(9, 6)
                         .HasColumnType("double precision");
 
                     b.Property<int>("Pressure")
