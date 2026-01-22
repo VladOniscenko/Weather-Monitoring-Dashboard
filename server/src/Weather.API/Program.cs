@@ -4,6 +4,8 @@ using Weather.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Weather.API.Middleware;
+using Weather.Application.Common.Interfaces;
+using Weather.Infrastructure.ExternalApi.OpenWeather;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +18,16 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<GlobalExceptionMiddleware>();
 
 builder.Services.AddControllers()
-    .AddJsonOptions(options => {
+    .AddJsonOptions(options =>
+    {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
+// Open weather map client
+builder.Services.AddHttpClient<IExternalWeatherApi, OpenWeatherApi>(client =>
+{
+    client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/");
+});
 
 var app = builder.Build();
 
@@ -49,7 +58,7 @@ using (var scope = app.Services.CreateScope())
         catch (Exception ex)
         {
             logger.LogWarning("Database Automation: Postgres not ready yet. Retrying in 3s...");
-            await Task.Delay(3000); 
+            await Task.Delay(3000);
             if (i == 9) throw new Exception("Database Automation: Failed to migrate after 10 attempts.", ex);
         }
     }
