@@ -10,11 +10,11 @@ public static class DependencyInjection
     {
         // Register Business Services
         services.AddScoped<IUserService, UserService>();
-        services.AddScoped<CityService>(); 
-        
+        services.AddScoped<CityService>();
+
         services.AddScoped<IUserService, UserService>();
         services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-        services.AddScoped<CityService>();
+        services.AddScoped<IWeatherSyncService, WeatherSyncService>();
         return services;
     }
 }
