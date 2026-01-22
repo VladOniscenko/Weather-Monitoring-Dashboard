@@ -34,8 +34,8 @@ public class UserService : IUserService
 
         // create user
         var user = new User(
-            request.Email,
             request.Name,
+            request.Email,
             BCrypt.Net.BCrypt.HashPassword(request.Password)
         );
 
