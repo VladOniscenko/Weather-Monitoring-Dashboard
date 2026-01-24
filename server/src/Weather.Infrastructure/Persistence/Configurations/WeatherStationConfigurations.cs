@@ -9,7 +9,7 @@ public class WeatherStationConfiguration : IEntityTypeConfiguration<WeatherStati
     {
         entity.Property(e => e.Name)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(255);
 
         entity.Property(e => e.Latitude)
             .HasPrecision(9, 6);
@@ -17,12 +17,15 @@ public class WeatherStationConfiguration : IEntityTypeConfiguration<WeatherStati
         entity.Property(e => e.Longitude)
             .HasPrecision(9, 6);
 
-        entity.HasOne(s => s.Country)
+        entity.HasOne(s => s.City)
             .WithMany()
-            .HasForeignKey(c => c.CountryId);
+            .HasForeignKey(c => c.CityId);
 
         entity.HasMany(s => s.Readings)
             .WithOne(wr => wr.Station)
             .HasForeignKey(s => s.StationId);
+        
+        entity.Property(s => s.LastSyncedAt)
+            .HasDefaultValueSql("NOW()");
     }
 }

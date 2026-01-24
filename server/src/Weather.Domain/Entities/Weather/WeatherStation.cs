@@ -8,17 +8,17 @@ public class WeatherStation : BaseEntity
     public DateTime LastSyncedAt { get; private set; }
 
     // Relationships
-    public Guid CountryId { get; private set; }
-    public virtual Country? Country { get; private set; } // Nullable for EF lazy loading
+    public Guid CityId { get; private set; }
+    public virtual City? City { get; private set; } // Nullable for EF lazy loading
 
     private readonly List<WeatherReading> _readings = new();
     public virtual IReadOnlyCollection<WeatherReading> Readings => _readings.AsReadOnly();
 
     // Constructor
-    public WeatherStation(string name, double latitude, double longitude, Guid countryId)
+    public WeatherStation(string name, double latitude, double longitude, Guid cityId)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Station name required.");
-        if (countryId == Guid.Empty) throw new ArgumentException("Station must belong to a country.");
+        if (cityId == Guid.Empty) throw new ArgumentException("Station must belong to a city.");
 
         // Coordinates Validation
         if (latitude < -90 || latitude > 90) throw new ArgumentException("Invalid Latitude.");
@@ -27,15 +27,15 @@ public class WeatherStation : BaseEntity
         Name = name;
         Latitude = latitude;
         Longitude = longitude;
-        CountryId = countryId;
+        CityId = cityId;
     }
 
-    public void UpdateDetails(string name, double latitude, double longitude, Guid countryId)
+    public void UpdateDetails(string name, double latitude, double longitude, Guid cityId)
     {
         Name = name;
         Latitude = latitude;
         Longitude = longitude;
-        CountryId = countryId;
+        CityId = cityId;
         RegisterUpdate();
     }
 
