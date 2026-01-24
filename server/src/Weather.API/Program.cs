@@ -77,4 +77,28 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
+// --- TRIGGER SEEDER START ---
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        // 1. Get the DbContext
+        var context = services.GetRequiredService<AppDbContext>();
+
+        // 2. Optional: Automatically run migrations on startup
+        // This is helpful in Docker so you don't have to run 'ef database update' manually
+        await context.Database.MigrateAsync();
+
+        // 3. Call your static Seeder method
+        await DbSeeder.SeedCountriesAndCities(context);
+        await DbSeeder.SeedWeatherStations(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+    }
+}
+
 app.Run();
