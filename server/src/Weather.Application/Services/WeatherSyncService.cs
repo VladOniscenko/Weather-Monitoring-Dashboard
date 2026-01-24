@@ -20,12 +20,25 @@ public class WeatherSyncService : IWeatherSyncService
     public async Task SyncAllStationsAsync()
     {
         // Get all stations
-        var stations = await _stationRepo.GetAllAsync();
+        var stations = await _stationRepo.FindAsync(
+            x => x.LastSyncedAt < DateTime.UtcNow,
+            new FindOptions<WeatherStation> { 
+                Take = 60,
+                OrderBy = q => q.OrderBy(x => x.LastSyncedAt)
+            }
+        );
 
         foreach (var station in stations)
         {
             // get weather data for station
             var data = await _externalApi.GetWeatherForCoordinates(station.Latitude, station.Longitude);
+
+            var alreadyExists = await _readingRepo.AnyAsync(r =>
+                r.StationId == station.Id &&
+                r.CapturedAt == data.CapturedAt);
+
+            if(alreadyExists)
+                continue;
 
             var reading = new WeatherReading(
                 station.Id,
@@ -38,6 +51,9 @@ public class WeatherSyncService : IWeatherSyncService
             );
 
             await _readingRepo.AddAsync(reading);
+
+            station.SyncedStation();
+            await _stationRepo.UpdateAsync(station);
         }
     }
 }
