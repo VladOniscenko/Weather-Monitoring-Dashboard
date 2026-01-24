@@ -23,7 +23,7 @@ public class WeatherSyncService : IWeatherSyncService
         var stations = await _stationRepo.FindAsync(
             x => x.LastSyncedAt < DateTime.UtcNow,
             new FindOptions<WeatherStation> { 
-                Take = 60,
+                Take = 50,
                 OrderBy = q => q.OrderBy(x => x.LastSyncedAt)
             }
         );
