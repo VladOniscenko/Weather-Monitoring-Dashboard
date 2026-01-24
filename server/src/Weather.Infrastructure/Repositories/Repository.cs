@@ -63,7 +63,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
 
 
 
-    public async Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate, FindOptions? findOptions = null)
+    public async Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate, FindOptions<TEntity>? findOptions = null)
     {
         return await Get(findOptions).FirstOrDefaultAsync(predicate);
     }
@@ -78,14 +78,14 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
 
 
 
-    public async Task<List<TEntity>> GetAllAsync(FindOptions? findOptions = null)
+    public async Task<List<TEntity>> GetAllAsync(FindOptions<TEntity>? findOptions = null)
     {
         return await Get(findOptions).ToListAsync();
     }
 
 
 
-    public async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, FindOptions? findOptions = null)
+    public async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, FindOptions<TEntity>? findOptions = null)
     {
         return await Get(findOptions).Where(predicate).ToListAsync();
     }
@@ -93,17 +93,41 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
 
 
     // query builder
-    private IQueryable<TEntity> Get(FindOptions? findOptions = null)
-    {
-        findOptions ??= new FindOptions();
-        var entity = _context.Set<TEntity>();
+private IQueryable<TEntity> Get(FindOptions<TEntity>? findOptions = null)
+{
+    findOptions ??= new FindOptions<TEntity>();
 
-        if (findOptions.IsAsNoTracking && findOptions.IsIgnoreAutoIncludes)
-            entity.IgnoreAutoIncludes().AsNoTracking();
-        else if (findOptions.IsIgnoreAutoIncludes)
-            entity.IgnoreAutoIncludes();
-        else if (findOptions.IsAsNoTracking)
-            entity.AsNoTracking();
-        return entity;
+    IQueryable<TEntity> query = _context.Set<TEntity>();
+
+    // ORDER FIRST
+    if (findOptions.OrderBy != null)
+    {
+        query = findOptions.OrderBy(query);
     }
+
+    // PAGING
+    if (findOptions.Take is int take && take > 0)
+    {
+        if (findOptions.Page is int page && page >= 0)
+        {
+            query = query.Skip(page * take);
+        }
+
+        query = query.Take(take);
+    }
+
+    // EF CORE OPTIONS
+    if (findOptions.IsIgnoreAutoIncludes)
+    {
+        query = query.IgnoreAutoIncludes();
+    }
+
+    if (findOptions.IsAsNoTracking)
+    {
+        query = query.AsNoTracking();
+    }
+
+    return query;
+}
+
 }
