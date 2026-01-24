@@ -5,6 +5,7 @@ public class WeatherStation : BaseEntity
     public string Name { get; private set; }
     public double Latitude { get; private set; }
     public double Longitude { get; private set; }
+    public DateTime LastSyncedAt { get; private set; }
 
     // Relationships
     public Guid CountryId { get; private set; }
@@ -35,6 +36,12 @@ public class WeatherStation : BaseEntity
         Latitude = latitude;
         Longitude = longitude;
         CountryId = countryId;
+        RegisterUpdate();
+    }
+
+    public void SyncedStation()
+    {
+        LastSyncedAt = DateTime.UtcNow;
         RegisterUpdate();
     }
 

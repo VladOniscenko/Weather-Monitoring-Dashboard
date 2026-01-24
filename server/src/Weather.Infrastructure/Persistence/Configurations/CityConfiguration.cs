@@ -15,9 +15,9 @@ public class CityConfiguration : IEntityTypeConfiguration<City>
         entity.Property(c => c.Population).HasDefaultValue(0);
         entity.Property(c => c.Timezone).HasMaxLength(100);
 
-        entity.HasOne<Country>()
-            .WithMany()
-            .HasForeignKey(c => c.CountryId)
+        entity.HasOne(city => city.Country)
+            .WithMany(c => c.Cities)
+            .HasForeignKey(city => city.CountryId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Weather.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Weather.Infrastructure.Persistence;
 namespace Weather.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260124215127_MapCountryCorrectly")]
+    partial class MapCountryCorrectly
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +32,9 @@ namespace Weather.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("CountryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CountryId1")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -68,6 +74,8 @@ namespace Weather.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
+
+                    b.HasIndex("CountryId1");
 
                     b.ToTable("Cities");
                 });
@@ -360,11 +368,15 @@ namespace Weather.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Weather.Domain.Entities.City", b =>
                 {
+                    b.HasOne("Weather.Domain.Entities.Country", null)
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Weather.Domain.Entities.Country", "Country")
                         .WithMany("Cities")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CountryId1");
 
                     b.Navigation("Country");
                 });

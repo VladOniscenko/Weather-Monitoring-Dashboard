@@ -3,7 +3,7 @@ namespace Weather.Domain.Entities;
 public class City : BaseEntity
 {
     public Guid CountryId { get; private set; }
-    public virtual Country? Country { get; private set; } // "virtual" allows EF Core to lazy load
+    public virtual Country? Country { get; private set; } = null!; // "virtual" allows EF Core to lazy load
 
     public string Name { get; private set; }
     public double Latitude { get; private set; }

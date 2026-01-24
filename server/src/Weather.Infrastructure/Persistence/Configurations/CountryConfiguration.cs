@@ -23,6 +23,9 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
         entity.Property(e => e.Flag).HasMaxLength(10);
         entity.HasIndex(e => e.CCA2).IsUnique();
         entity.HasIndex(e => e.CCA3).IsUnique();
-        entity.HasMany<City>().WithOne().HasForeignKey(c => c.CountryId);
+        
+        entity.HasMany(country => country.Cities)
+            .WithOne(s => s.Country)
+            .HasForeignKey(s => s.CountryId);
     }
 }
