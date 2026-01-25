@@ -22,6 +22,7 @@ public class CitiesController : BaseController
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAll([FromQuery] CityQuery? query = null)
     {
         var cities = await _service.QueryAsync(query);
@@ -29,6 +30,7 @@ public class CitiesController : BaseController
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetById(Guid id)
     {
         var city = await _service.FindOneAsync(x => x.Id == id);
