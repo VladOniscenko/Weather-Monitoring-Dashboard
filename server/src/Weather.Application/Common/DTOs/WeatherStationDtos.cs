@@ -1,15 +1,24 @@
 namespace Weather.Application.Common.DTOs;
 
 public record CreateWeatherStationRequest(
-    string Name, 
+    string Name,
     double Latitude,
     double Longitude,
-    Guid CountryId
+    Guid CityId
 );
 
 public record UpdateWeatherStationRequest(
-    string Name, 
+    string Name,
     double Latitude,
     double Longitude,
-    Guid CountryId
+    Guid CityId
+);
+
+public record WeatherStationDto(
+    Guid Id,
+    Guid CityId,
+    string Name,
+    double Latitude,
+    double Longitude,
+    DateTime LastSyncedAt
 );

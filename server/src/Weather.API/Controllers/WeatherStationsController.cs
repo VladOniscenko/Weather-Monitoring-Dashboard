@@ -32,7 +32,7 @@ public class WeatherStationsController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var station = await _service.FindOneAsync(x => x.Id == id);
+        var station = await _service.FindOneDtoAsync(x => x.Id == id);
 
         if (station == null)
         {
@@ -54,7 +54,7 @@ public class WeatherStationsController : BaseController
                 request.Name,
                 request.Latitude,
                 request.Longitude,
-                request.CountryId
+                request.CityId
             );
 
             await _service.CreateAsync(newWeatherStation);
@@ -84,7 +84,7 @@ public class WeatherStationsController : BaseController
                 request.Name,
                 request.Latitude,
                 request.Longitude,
-                request.CountryId
+                request.CityId
             );
 
             await _service.UpdateAsync(station);
