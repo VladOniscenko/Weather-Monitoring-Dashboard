@@ -27,8 +27,10 @@ public static class DependencyInjection
             b => b.MigrationsAssembly("Weather.Infrastructure")));
 
         // Repositories
-        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IWeatherStationRepository, WeatherStationRepository>();
+        services.AddScoped<IWeatherReadingRepository, WeatherReadingRepository>();
 
         // Identity & JWT
         var jwtSettings = new JwtSettings();

@@ -9,12 +9,13 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         // Register Business Services
+        services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+        services.AddScoped<IWeatherStationService, WeatherStationService>();
+        services.AddScoped<IWeatherReadingService, WeatherReadingService>();
+        services.AddScoped<IWeatherSyncService, WeatherSyncService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<CityService>();
 
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-        services.AddScoped<IWeatherSyncService, WeatherSyncService>();
         return services;
     }
 }

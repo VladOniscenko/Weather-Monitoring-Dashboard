@@ -93,41 +93,41 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
 
 
     // query builder
-private IQueryable<TEntity> Get(FindOptions<TEntity>? findOptions = null)
-{
-    findOptions ??= new FindOptions<TEntity>();
-
-    IQueryable<TEntity> query = _context.Set<TEntity>();
-
-    // ORDER FIRST
-    if (findOptions.OrderBy != null)
+    private IQueryable<TEntity> Get(FindOptions<TEntity>? findOptions = null)
     {
-        query = findOptions.OrderBy(query);
-    }
+        findOptions ??= new FindOptions<TEntity>();
 
-    // PAGING
-    if (findOptions.Take is int take && take > 0)
-    {
-        if (findOptions.Page is int page && page >= 0)
+        IQueryable<TEntity> query = _context.Set<TEntity>();
+
+        // ORDER FIRST
+        if (findOptions.OrderBy != null)
         {
-            query = query.Skip(page * take);
+            query = findOptions.OrderBy(query);
         }
 
-        query = query.Take(take);
-    }
+        // PAGING
+        if (findOptions.Take is int take && take > 0)
+        {
+            if (findOptions.Page is int page && page >= 0)
+            {
+                query = query.Skip(page * take);
+            }
 
-    // EF CORE OPTIONS
-    if (findOptions.IsIgnoreAutoIncludes)
-    {
-        query = query.IgnoreAutoIncludes();
-    }
+            query = query.Take(take);
+        }
 
-    if (findOptions.IsAsNoTracking)
-    {
-        query = query.AsNoTracking();
-    }
+        // EF CORE OPTIONS
+        if (findOptions.IsIgnoreAutoIncludes)
+        {
+            query = query.IgnoreAutoIncludes();
+        }
 
-    return query;
-}
+        if (findOptions.IsAsNoTracking)
+        {
+            query = query.AsNoTracking();
+        }
+
+        return query;
+    }
 
 }

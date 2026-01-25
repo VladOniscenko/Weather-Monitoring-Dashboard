@@ -3,13 +3,13 @@ using Weather.Domain.Entities;
 
 public class WeatherSyncService : IWeatherSyncService
 {
-    private readonly IGenericRepository<WeatherStation> _stationRepo;
-    private readonly IGenericRepository<WeatherReading> _readingRepo;
+    private readonly IWeatherStationRepository _stationRepo;
+    private readonly IWeatherReadingRepository _readingRepo;
     private readonly IExternalWeatherApi _externalApi;
 
     public WeatherSyncService(
-        IGenericRepository<WeatherStation> stationRepo,
-        IGenericRepository<WeatherReading> readingRepo,
+        IWeatherStationRepository stationRepo,
+        IWeatherReadingRepository readingRepo,
         IExternalWeatherApi externalApi)
     {
         _readingRepo = readingRepo;
