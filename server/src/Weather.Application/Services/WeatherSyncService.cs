@@ -21,7 +21,7 @@ public class WeatherSyncService : IWeatherSyncService
     {
         // Get all stations
         var stations = await _stationRepo.FindAsync(
-            x => x.LastSyncedAt < DateTime.UtcNow,
+            predicate: x => x.City.Country.Region == "Europe",
             new FindOptions<WeatherStation> { 
                 Take = 50,
                 OrderBy = q => q.OrderBy(x => x.LastSyncedAt)

@@ -10,8 +10,6 @@ public class UserRepository : GenericRepository<User>, IUserRepository
 {
     public UserRepository(AppDbContext context) : base(context) { }
 
-
-
     public async Task<List<User>> GetUsersAsync(UserQuery? query = null)
     {
         query ??= new UserQuery();
