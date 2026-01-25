@@ -85,49 +85,53 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
 
 
 
-    public async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, FindOptions<TEntity>? findOptions = null)
+    public async Task<List<TEntity>> FindAsync(
+        Expression<Func<TEntity, bool>> predicate,
+        FindOptions<TEntity>? findOptions = null)
     {
-        return await Get(findOptions).Where(predicate).ToListAsync();
-    }
+        // 1. Start with the raw set
+        IQueryable<TEntity> query = _context.Set<TEntity>();
 
+        // 2. Apply the Filter FIRST (Where)
+        query = query.Where(predicate);
+
+        // 3. Apply the 'FindOptions' (Order, Take, Skip) to the filtered result
+        return await ApplyOptions(query, findOptions).ToListAsync();
+    }
 
 
     // query builder
-    private IQueryable<TEntity> Get(FindOptions<TEntity>? findOptions = null)
+    private IQueryable<TEntity> Get(FindOptions<TEntity>? options = null)
     {
-        findOptions ??= new FindOptions<TEntity>();
-
         IQueryable<TEntity> query = _context.Set<TEntity>();
+        return ApplyOptions(query, options);
+    }
 
-        // ORDER FIRST
-        if (findOptions.OrderBy != null)
+    private IQueryable<TEntity> ApplyOptions(IQueryable<TEntity> query, FindOptions<TEntity>? options)
+    {
+        if (options == null)
         {
-            query = findOptions.OrderBy(query);
+            return query;
         }
 
-        // PAGING
-        if (findOptions.Take is int take && take > 0)
-        {
-            if (findOptions.Page is int page && page >= 0)
-            {
-                query = query.Skip(page * take);
-            }
+        // Order the FILTERED list
+        if (options.OrderBy != null)
+            query = options.OrderBy(query);
 
-            query = query.Take(take);
+        // Page the FILTERED list
+        if (options.Take > 0)
+        {
+            if (options.Page > 0)
+                query = query.Skip(options.Page.Value * options.Take.Value);
+            query = query.Take(options.Take.Value);
         }
 
         // EF CORE OPTIONS
-        if (findOptions.IsIgnoreAutoIncludes)
-        {
+        if (options.IsIgnoreAutoIncludes)
             query = query.IgnoreAutoIncludes();
-        }
-
-        if (findOptions.IsAsNoTracking)
-        {
+        if (options.IsAsNoTracking)
             query = query.AsNoTracking();
-        }
-
+        
         return query;
     }
-
 }
