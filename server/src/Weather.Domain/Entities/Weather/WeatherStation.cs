@@ -28,6 +28,7 @@ public class WeatherStation : BaseEntity
         Latitude = latitude;
         Longitude = longitude;
         CityId = cityId;
+        LastSyncedAt = DateTime.UtcNow;
     }
 
     public void UpdateDetails(string name, double latitude, double longitude, Guid cityId)
