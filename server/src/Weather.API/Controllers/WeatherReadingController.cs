@@ -28,7 +28,7 @@ public class WeatherReadingController : BaseController
     [AllowAnonymous]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var city = await _service.FindOneAsync(x => x.Id == id);
+        var city = await _service.FindOneDtoAsync(x => x.Id == id);
         if (city == null)
             return NotFoundResponse("Reading not found");
 

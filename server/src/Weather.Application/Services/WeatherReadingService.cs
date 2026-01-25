@@ -2,6 +2,7 @@ using Weather.Domain.Entities;
 using Weather.Application.Common.Interfaces;
 using Weather.Application.Common.DTOs;
 using System.Linq.Expressions;
+using Weather.Infrastructure.Mappers;
 
 namespace Weather.Application.Services;
 
@@ -9,7 +10,7 @@ public class WeatherReadingService : GenericService<WeatherReading>, IWeatherRea
 {
     public WeatherReadingService(IWeatherReadingRepository repo) : base(repo) { }
 
-    public async Task<List<WeatherReading>> QueryAsync(ReadingQuery? query = null)
+    public async Task<List<WeatherReadingDto>> QueryAsync(ReadingQuery? query = null)
     {
         query ??= new ReadingQuery();
 
@@ -35,10 +36,17 @@ public class WeatherReadingService : GenericService<WeatherReading>, IWeatherRea
                 ws => ws.CreatedAt >= start && ws.CreatedAt <= end);
         }
 
-
-        return await _repo.FindAsync(
+        var results = await _repo.FindAsync(
             predicate,
             new FindOptions<WeatherReading> { Page = query.Page - 1, Take = query.PageSize }
         );
+
+        return results.Select(x => x.ToDto()).ToList();
+    }
+
+    public async Task<WeatherReadingDto?> FindOneDtoAsync(Expression<Func<WeatherReading, bool>> predicate)
+    {
+        var result = await base.FindOneAsync(predicate);
+        return result?.ToDto();
     }
 }
