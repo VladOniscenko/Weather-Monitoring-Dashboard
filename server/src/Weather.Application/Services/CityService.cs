@@ -18,7 +18,7 @@ public class CityService : GenericService<City>
 
         // Filter by name
         if (!string.IsNullOrWhiteSpace(query.Name))
-            predicate = Combine(predicate, c => c.Name.Contains(query.Name));
+            predicate = Combine(predicate, c => c.Name.ToLower().Contains(query.Name.ToLower()));
 
         // Filter by country
         if (query.CountryId.HasValue)
