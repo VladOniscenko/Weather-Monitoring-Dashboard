@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Weather.Domain.Entities;
 using Weather.Application.Common.Interfaces;
 using Weather.Application.Common.DTOs;
-using Weather.Application.Common.Models;
-using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
 namespace Weather.API.Controllers;
 

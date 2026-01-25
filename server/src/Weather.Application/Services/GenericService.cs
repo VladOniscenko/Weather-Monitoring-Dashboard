@@ -46,4 +46,15 @@ public class GenericService<T> : IGenericService<T> where T : class
     {
         return await _repo.CountAsync(predicate);
     }
+
+    public Expression<Func<T, bool>> Combine(Expression<Func<T, bool>> exp1, Expression<Func<T, bool>> exp2)
+    {
+        var param = Expression.Parameter(typeof(T), "ws");
+        var body = Expression.AndAlso(
+            Expression.Invoke(exp1, param),
+            Expression.Invoke(exp2, param)
+        );
+
+        return Expression.Lambda<Func<T, bool>>(body, param);
+    }
 }

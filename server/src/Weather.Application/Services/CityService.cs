@@ -55,17 +55,4 @@ public class CityService : GenericService<City>
         int skip = (query.Page - 1) * query.PageSize;
         return all.Skip(skip).Take(query.PageSize).ToList();
     }
-
-    // Combines two predicates safely using Expression.Invoke
-    private Expression<Func<City, bool>> Combine(Expression<Func<City, bool>> expr1, Expression<Func<City, bool>> expr2)
-    {
-        var param = Expression.Parameter(typeof(City), "c");
-
-        var body = Expression.AndAlso(
-            Expression.Invoke(expr1, param),
-            Expression.Invoke(expr2, param)
-        );
-
-        return Expression.Lambda<Func<City, bool>>(body, param);
-    }
 }

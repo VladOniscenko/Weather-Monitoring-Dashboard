@@ -41,15 +41,4 @@ public class WeatherReadingService : GenericService<WeatherReading>, IWeatherRea
             new FindOptions<WeatherReading> { Page = query.Page - 1, Take = query.PageSize }
         );
     }
-
-    private Expression<Func<WeatherReading, bool>> Combine(Expression<Func<WeatherReading, bool>> exp1, Expression<Func<WeatherReading, bool>> exp2)
-    {
-        var param = Expression.Parameter(typeof(WeatherReading), "ws");
-        var body = Expression.AndAlso(
-            Expression.Invoke(exp1, param),
-            Expression.Invoke(exp2, param)
-        );
-
-        return Expression.Lambda<Func<WeatherReading, bool>>(body, param);
-    }
 }

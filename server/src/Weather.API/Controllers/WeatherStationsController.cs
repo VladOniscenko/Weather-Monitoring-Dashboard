@@ -14,17 +14,18 @@ namespace Weather.API.Controllers;
 [Route("api/[controller]")]
 public class WeatherStationsController : BaseController
 {
-    private readonly IGenericService<WeatherStation> _service;
+    private readonly IWeatherStationService _service;
 
-    public WeatherStationsController(IGenericService<WeatherStation> service)
+    public WeatherStationsController(IWeatherStationService service)
     {
         _service = service;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAll([FromQuery] StationQuery? query = null)
     {
-        var countries = await _service.GetAllAsync();
+        var countries = await _service.QueryAsync(query);
         return OkResponse(countries);
     }
 
@@ -42,6 +43,7 @@ public class WeatherStationsController : BaseController
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Create([FromBody] CreateWeatherStationRequest request)
     {
         if (!ModelState.IsValid) return BadRequestResponse("Invalid data", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
