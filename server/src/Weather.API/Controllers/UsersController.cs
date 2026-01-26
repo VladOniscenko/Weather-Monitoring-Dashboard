@@ -15,7 +15,7 @@ public class UsersController : BaseController
         _userService = userService;
     }
 
-    [HttpPost("register")]
+    [HttpPost("register", Name = "RegisterUser")]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] UserRegisterRequestDto request)
     {
@@ -23,7 +23,7 @@ public class UsersController : BaseController
         return OkResponse(result, "Registration successful");
     }
 
-    [HttpPost("login")]
+    [HttpPost("login", Name = "LoginUser")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] UserLoginRequestDto request)
     {
@@ -31,7 +31,7 @@ public class UsersController : BaseController
         return OkResponse(token, "Login successful");
     }
 
-    [HttpGet("me")]
+    [HttpGet("me", Name = "GetCurrentUser")]
     public async Task<IActionResult> GetMe()
     {
         var user = await _userService.GetMeAsync();
@@ -45,7 +45,7 @@ public class UsersController : BaseController
         return OkResponse(updatedUser, "Profile updated");
     }
 
-    [HttpGet("{Id}")]
+    [HttpGet("{Id}", Name = "GetUserById")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetUser(Guid Id)
     {
@@ -54,7 +54,7 @@ public class UsersController : BaseController
         return OkResponse(user);
     }
 
-    [HttpGet]
+    [HttpGet(Name = "GetUsers")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Users([FromQuery] UserQuery? query = null)
     {
