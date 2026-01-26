@@ -2,17 +2,20 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CountryDtoApiResponse } from '../models/CountryDtoApiResponse';
+import type { CountryDtoListApiResponse } from '../models/CountryDtoListApiResponse';
 import type { CreateCountryRequest } from '../models/CreateCountryRequest';
+import type { ObjectApiResponse } from '../models/ObjectApiResponse';
 import type { UpdateCountryRequest } from '../models/UpdateCountryRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class CountriesService {
     /**
-     * @returns any OK
+     * @returns CountryDtoListApiResponse OK
      * @throws ApiError
      */
-    public static getApiCountries(): CancelablePromise<any> {
+    public static getAllCountries(): CancelablePromise<CountryDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Countries',
@@ -20,12 +23,12 @@ export class CountriesService {
     }
     /**
      * @param requestBody
-     * @returns any OK
+     * @returns CountryDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiCountries(
+    public static createCountry(
         requestBody?: CreateCountryRequest,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<CountryDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/Countries',
@@ -35,12 +38,12 @@ export class CountriesService {
     }
     /**
      * @param id
-     * @returns any OK
+     * @returns CountryDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiCountries1(
+    public static getCountryById(
         id: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<CountryDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Countries/{id}',
@@ -52,13 +55,13 @@ export class CountriesService {
     /**
      * @param id
      * @param requestBody
-     * @returns any OK
+     * @returns CountryDtoApiResponse OK
      * @throws ApiError
      */
-    public static putApiCountries(
+    public static updateCountry(
         id: string,
         requestBody?: UpdateCountryRequest,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<CountryDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/Countries/{id}',
@@ -71,12 +74,12 @@ export class CountriesService {
     }
     /**
      * @param id
-     * @returns any OK
+     * @returns ObjectApiResponse OK
      * @throws ApiError
      */
-    public static deleteApiCountries(
+    public static deleteCountry(
         id: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/Countries/{id}',

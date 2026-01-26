@@ -2,7 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CityDtoApiResponse } from '../models/CityDtoApiResponse';
+import type { CityDtoListApiResponse } from '../models/CityDtoListApiResponse';
 import type { CreateCityRequest } from '../models/CreateCityRequest';
+import type { ObjectApiResponse } from '../models/ObjectApiResponse';
 import type { UpdateCityRequest } from '../models/UpdateCityRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -16,7 +19,7 @@ export class CitiesService {
      * @param countryId
      * @param page
      * @param pageSize
-     * @returns any OK
+     * @returns CityDtoListApiResponse OK
      * @throws ApiError
      */
     public static getApiCities(
@@ -27,7 +30,7 @@ export class CitiesService {
         countryId?: string,
         page?: number,
         pageSize?: number,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<CityDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Cities',
@@ -44,12 +47,12 @@ export class CitiesService {
     }
     /**
      * @param requestBody
-     * @returns any OK
+     * @returns CityDtoApiResponse OK
      * @throws ApiError
      */
     public static postApiCities(
         requestBody?: CreateCityRequest,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<CityDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/Cities',
@@ -59,12 +62,12 @@ export class CitiesService {
     }
     /**
      * @param id
-     * @returns any OK
+     * @returns CityDtoApiResponse OK
      * @throws ApiError
      */
     public static getApiCities1(
         id: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<CityDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Cities/{id}',
@@ -76,13 +79,13 @@ export class CitiesService {
     /**
      * @param id
      * @param requestBody
-     * @returns any OK
+     * @returns CityDtoApiResponse OK
      * @throws ApiError
      */
     public static putApiCities(
         id: string,
         requestBody?: UpdateCityRequest,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<CityDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/Cities/{id}',
@@ -95,12 +98,12 @@ export class CitiesService {
     }
     /**
      * @param id
-     * @returns any OK
+     * @returns ObjectApiResponse OK
      * @throws ApiError
      */
     public static deleteApiCities(
         id: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/Cities/{id}',

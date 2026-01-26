@@ -2,6 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { WeatherReadingDtoApiResponse } from '../models/WeatherReadingDtoApiResponse';
+import type { WeatherReadingDtoListApiResponse } from '../models/WeatherReadingDtoListApiResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -12,16 +14,16 @@ export class WeatherReadingService {
      * @param stationId
      * @param page
      * @param pageSize
-     * @returns any OK
+     * @returns WeatherReadingDtoListApiResponse OK
      * @throws ApiError
      */
-    public static getApiWeatherReading(
+    public static getReadings(
         start?: string,
         end?: string,
         stationId?: string,
         page?: number,
         pageSize?: number,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<WeatherReadingDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/WeatherReading',
@@ -36,12 +38,12 @@ export class WeatherReadingService {
     }
     /**
      * @param id
-     * @returns any OK
+     * @returns WeatherReadingDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiWeatherReading1(
+    public static getReadingById(
         id: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<WeatherReadingDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/WeatherReading/{id}',

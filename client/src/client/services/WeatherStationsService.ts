@@ -4,6 +4,8 @@
 /* eslint-disable */
 import type { CreateWeatherStationRequest } from '../models/CreateWeatherStationRequest';
 import type { UpdateWeatherStationRequest } from '../models/UpdateWeatherStationRequest';
+import type { WeatherStationDtoApiResponse } from '../models/WeatherStationDtoApiResponse';
+import type { WeatherStationDtoListApiResponse } from '../models/WeatherStationDtoListApiResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -13,15 +15,15 @@ export class WeatherStationsService {
      * @param name
      * @param page
      * @param pageSize
-     * @returns any OK
+     * @returns WeatherStationDtoListApiResponse OK
      * @throws ApiError
      */
-    public static getApiWeatherStations(
+    public static getAllStations(
         cityId?: string,
         name?: string,
         page?: number,
         pageSize?: number,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<WeatherStationDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/WeatherStations',
@@ -38,7 +40,7 @@ export class WeatherStationsService {
      * @returns any OK
      * @throws ApiError
      */
-    public static postApiWeatherStations(
+    public static createStation(
         requestBody?: CreateWeatherStationRequest,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
@@ -50,12 +52,12 @@ export class WeatherStationsService {
     }
     /**
      * @param id
-     * @returns any OK
+     * @returns WeatherStationDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiWeatherStations1(
+    public static getApiWeatherStations(
         id: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<WeatherStationDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/WeatherStations/{id}',
@@ -70,7 +72,7 @@ export class WeatherStationsService {
      * @returns any OK
      * @throws ApiError
      */
-    public static putApiWeatherStations(
+    public static updateStation(
         id: string,
         requestBody?: UpdateWeatherStationRequest,
     ): CancelablePromise<any> {
@@ -89,7 +91,7 @@ export class WeatherStationsService {
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteApiWeatherStations(
+    public static deleteStation(
         id: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {

@@ -2,8 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { UserDtoApiResponse } from '../models/UserDtoApiResponse';
 import type { UserLoginRequestDto } from '../models/UserLoginRequestDto';
+import type { UserLoginResponseDtoApiResponse } from '../models/UserLoginResponseDtoApiResponse';
 import type { UserRegisterRequestDto } from '../models/UserRegisterRequestDto';
+import type { UserRegisterResponseDtoApiResponse } from '../models/UserRegisterResponseDtoApiResponse';
 import type { UserUpdateRequestDto } from '../models/UserUpdateRequestDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -11,12 +14,12 @@ import { request as __request } from '../core/request';
 export class UsersService {
     /**
      * @param requestBody
-     * @returns any OK
+     * @returns UserRegisterResponseDtoApiResponse OK
      * @throws ApiError
      */
-    public static postRegister(
+    public static registerUser(
         requestBody?: UserRegisterRequestDto,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<UserRegisterResponseDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/register',
@@ -26,12 +29,12 @@ export class UsersService {
     }
     /**
      * @param requestBody
-     * @returns any OK
+     * @returns UserLoginResponseDtoApiResponse OK
      * @throws ApiError
      */
-    public static postLogin(
+    public static loginUser(
         requestBody?: UserLoginRequestDto,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<UserLoginResponseDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/login',
@@ -40,10 +43,10 @@ export class UsersService {
         });
     }
     /**
-     * @returns any OK
+     * @returns UserDtoApiResponse OK
      * @throws ApiError
      */
-    public static getMe(): CancelablePromise<any> {
+    public static getCurrentUser(): CancelablePromise<UserDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/me',
@@ -51,12 +54,12 @@ export class UsersService {
     }
     /**
      * @param requestBody
-     * @returns any OK
+     * @returns UserDtoApiResponse OK
      * @throws ApiError
      */
     public static patchProfile(
         requestBody?: UserUpdateRequestDto,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<UserDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/profile',
@@ -66,12 +69,12 @@ export class UsersService {
     }
     /**
      * @param id
-     * @returns any OK
+     * @returns UserDtoApiResponse OK
      * @throws ApiError
      */
-    public static get(
+    public static getUserById(
         id: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<UserDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/{Id}',
