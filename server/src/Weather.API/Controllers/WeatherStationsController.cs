@@ -21,7 +21,7 @@ public class WeatherStationsController : BaseController
         _service = service;
     }
 
-    [HttpGet]
+    [HttpGet(Name = "GetAllStations")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAll([FromQuery] StationQuery? query = null)
     {
@@ -42,7 +42,7 @@ public class WeatherStationsController : BaseController
         return OkResponse(station);
     }
 
-    [HttpPost]
+    [HttpPost(Name = "CreateStation")]
     [AllowAnonymous]
     public async Task<IActionResult> Create([FromBody] CreateWeatherStationRequest request)
     {
@@ -71,7 +71,7 @@ public class WeatherStationsController : BaseController
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id}", Name = "UpdateStation")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWeatherStationRequest request)
     {
         var station = await _service.FindOneAsync(x => x.Id == id);
@@ -100,7 +100,7 @@ public class WeatherStationsController : BaseController
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}", Name = "DeleteStation")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var station = await _service.FindOneAsync(x => x.Id == id);
