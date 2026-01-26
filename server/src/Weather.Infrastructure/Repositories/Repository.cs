@@ -16,7 +16,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     }
 
 
-
+    public IQueryable<TEntity> Queryable => _context.Set<TEntity>();
     public async Task AddAsync(TEntity entity)
     {
         await _context.Set<TEntity>().AddAsync(entity);
@@ -131,7 +131,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
             query = query.IgnoreAutoIncludes();
         if (options.IsAsNoTracking)
             query = query.AsNoTracking();
-        
+
         return query;
     }
 }

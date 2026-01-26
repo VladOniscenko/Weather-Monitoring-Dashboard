@@ -20,4 +20,5 @@ public interface IGenericRepository<TEntity> where TEntity : class
 
     Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
     Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate);
+    IQueryable<TEntity> Queryable { get; }
 }
