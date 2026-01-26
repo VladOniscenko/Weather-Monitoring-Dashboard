@@ -2,7 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export enum UserRole {
-    ADMIN = 'Admin',
-    USER = 'User',
-}
+export type UserRole = 'Admin' | 'User';

@@ -28,7 +28,7 @@ export type { UserLoginResponseDtoApiResponse } from './models/UserLoginResponse
 export type { UserRegisterRequestDto } from './models/UserRegisterRequestDto';
 export type { UserRegisterResponseDto } from './models/UserRegisterResponseDto';
 export type { UserRegisterResponseDtoApiResponse } from './models/UserRegisterResponseDtoApiResponse';
-export { UserRole } from './models/UserRole';
+export type { UserRole } from './models/UserRole';
 export type { UserUpdateRequestDto } from './models/UserUpdateRequestDto';
 export type { WeatherReadingDto } from './models/WeatherReadingDto';
 export type { WeatherReadingDtoApiResponse } from './models/WeatherReadingDtoApiResponse';

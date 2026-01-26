@@ -6,7 +6,7 @@ export type Theme =
   | "dark"          // Standard professional slate
   | "dracula"       // High-contrast developer favorite (Purple/Pink)
   | "nord"          // Eye-strain reducing arctic blue/gray
-  | "cyber"    // High-contrast glow / Outrun style
+  | "cyber"         // High-contrast glow / Outrun style
   | "forest"        // Eco-digital / moss tones
 
 export const THEMES: Theme[] = [

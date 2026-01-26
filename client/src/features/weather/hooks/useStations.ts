@@ -6,20 +6,35 @@ type UseStationsParams = {
   name?: string;
   page?: number;
   pageSize?: number;
+  minLng?: number;
+  maxLng?: number;
+  minLat?: number;
+  maxLat?: number;
+  zoom?: number;
 };
 
 export const useStations = ({
   cityId,
   name,
+  minLng,
+  maxLng,
+  minLat,
+  maxLat,
+  zoom,
   page = 1,
-  pageSize = 10,
+  pageSize = 100,
 }: UseStationsParams = {}) => {
   return useQuery<WeatherStationDto[]>({
-    queryKey: ['stations', { cityId, name, page, pageSize }],
+    queryKey: ['stations', { cityId, name, page, pageSize, minLng, maxLng, minLat, maxLat, zoom, }],
     queryFn: async () => {
       const response = await WeatherStationsService.getAllStations(
         cityId,
         name,
+        minLng,
+        maxLng,
+        minLat,
+        maxLat,
+        zoom,
         page,
         pageSize,
       );

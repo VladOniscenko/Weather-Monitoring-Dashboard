@@ -13,6 +13,11 @@ export class WeatherStationsService {
     /**
      * @param cityId
      * @param name
+     * @param minLng
+     * @param maxLng
+     * @param minLat
+     * @param maxLat
+     * @param zoom
      * @param page
      * @param pageSize
      * @returns WeatherStationDtoListApiResponse OK
@@ -21,6 +26,11 @@ export class WeatherStationsService {
     public static getAllStations(
         cityId?: string,
         name?: string,
+        minLng?: number,
+        maxLng?: number,
+        minLat?: number,
+        maxLat?: number,
+        zoom?: number,
         page?: number,
         pageSize?: number,
     ): CancelablePromise<WeatherStationDtoListApiResponse> {
@@ -30,6 +40,11 @@ export class WeatherStationsService {
             query: {
                 'CityId': cityId,
                 'Name': name,
+                'MinLng': minLng,
+                'MaxLng': maxLng,
+                'MinLat': minLat,
+                'MaxLat': maxLat,
+                'Zoom': zoom,
                 'Page': page,
                 'PageSize': pageSize,
             },
