@@ -21,27 +21,24 @@ public class CountriesController : BaseController
         _service = service;
     }
 
-    [HttpGet]
+    [HttpGet(Name = "GetAllCountries")]
     public async Task<IActionResult> GetAll()
     {
         var countries = await _service.GetAllAsync();
         return OkResponse(countries);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetCountryById")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var country = await _service.FindOneAsync(x => x.Id == id);
-
         if (country == null)
-        {
             return NotFoundResponse("Country not found");
-        }
 
         return OkResponse(country);
     }
 
-    [HttpPost]
+    [HttpPost(Name = "CreateCountry")]
     public async Task<IActionResult> Create([FromBody] CreateCountryRequest request)
     {
         if (!ModelState.IsValid) return BadRequestResponse("Invalid data", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
@@ -76,7 +73,7 @@ public class CountriesController : BaseController
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id}", Name = "UpdateCountry")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCountryRequest request)
     {
         var country = await _service.FindOneAsync(x => x.Id == id);
@@ -112,7 +109,7 @@ public class CountriesController : BaseController
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}", Name = "DeleteCountry")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var country = await _service.FindOneAsync(x => x.Id == id);
