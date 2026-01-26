@@ -1,10 +1,32 @@
 import { useQuery } from '@tanstack/react-query';
-import { WeatherStationsService } from '@/client';
+import { WeatherStationsService, type WeatherStationDto } from '@/client';
 
-export const useStations = () => {
-  return useQuery({
-    queryKey: ['stations'], 
-    // The generator gives you a typed function ready to use
-    queryFn: () => WeatherStationsService.getApiWeatherStations() 
+type UseStationsParams = {
+  cityId?: string;
+  name?: string;
+  page?: number;
+  pageSize?: number;
+};
+
+export const useStations = ({
+  cityId,
+  name,
+  page = 1,
+  pageSize = 10,
+}: UseStationsParams = {}) => {
+  return useQuery<WeatherStationDto[]>({
+    queryKey: ['stations', { cityId, name, page, pageSize }],
+    queryFn: async () => {
+      const response = await WeatherStationsService.getAllStations(
+        cityId,
+        name,
+        page,
+        pageSize,
+      );
+
+      return response.data ?? [];
+    },
+
+    placeholderData: (previousData) => previousData,
   });
 };

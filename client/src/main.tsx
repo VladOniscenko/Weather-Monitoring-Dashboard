@@ -19,8 +19,7 @@ OpenAPI.TOKEN = async () => {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Professional tip: only refetch when the window is refocused if you really need it
-      refetchOnWindowFocus: false, 
+      refetchOnWindowFocus: false,
       retry: 1,
     },
   },
