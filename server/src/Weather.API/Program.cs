@@ -29,6 +29,17 @@ builder.Services.AddHttpClient<IExternalWeatherApi, OpenWeatherApi>(client =>
     client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/");
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 
 // --- EXECUTION PHASE ---
@@ -71,10 +82,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapControllers();
 app.UseHttpsRedirection();
+app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // --- TRIGGER SEEDER START ---
