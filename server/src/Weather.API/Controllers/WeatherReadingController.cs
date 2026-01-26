@@ -16,7 +16,7 @@ public class WeatherReadingController : BaseController
         _service = service;
     }
 
-    [HttpGet]
+    [HttpGet(Name = "GetReadings")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAll([FromQuery] ReadingQuery? query = null)
     {
@@ -24,7 +24,7 @@ public class WeatherReadingController : BaseController
         return OkResponse(cities);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetReadingById")]
     [AllowAnonymous]
     public async Task<IActionResult> GetById(Guid id)
     {
