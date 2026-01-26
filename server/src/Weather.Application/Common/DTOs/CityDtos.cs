@@ -16,6 +16,16 @@ public class CityQuery
     private readonly int _pageSize = 20;
 }
 
+public record CityDto(
+    Guid Id,
+    Guid CountryId,
+    string Name,
+    double Latitude,
+    double Longitude,
+    long Population,
+    string Timezone
+);
+
 public record CreateCityRequest(
     Guid CountryId,
     string Name,

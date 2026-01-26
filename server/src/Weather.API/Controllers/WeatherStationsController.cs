@@ -23,23 +23,23 @@ public class WeatherStationsController : BaseController
 
     [HttpGet(Name = "GetAllStations")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetAll([FromQuery] StationQuery? query = null)
+    public async Task<ActionResult<ApiResponse<List<WeatherStationDto>>>> GetAll([FromQuery] StationQuery? query = null)
     {
         var countries = await _service.QueryAsync(query);
-        return OkResponse(countries);
+        return Ok(ApiResponse<List<WeatherStationDto>>.SuccessResponse(countries));
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<ActionResult<ApiResponse<WeatherStationDto>>> GetById(Guid id)
     {
         var station = await _service.FindOneDtoAsync(x => x.Id == id);
 
         if (station == null)
         {
-            return NotFoundResponse("WeatherStation not found");
+            return NotFound(ApiResponse<WeatherStationDto>.FailureResponse("WeatherStation not found"));
         }
 
-        return OkResponse(station);
+        return Ok(ApiResponse<WeatherStationDto>.SuccessResponse(station));
     }
 
     [HttpPost(Name = "CreateStation")]

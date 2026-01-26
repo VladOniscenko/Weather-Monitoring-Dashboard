@@ -6,6 +6,8 @@ using Weather.Application.Common.DTOs;
 using Weather.Application.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Weather.Infrastructure.Mappers;
+using Weather.Application.Common.Interfaces;
 
 namespace Weather.API.Controllers;
 
@@ -14,97 +16,91 @@ namespace Weather.API.Controllers;
 [Route("api/[controller]")]
 public class CitiesController : BaseController
 {
-    private readonly CityService _service;
+    private readonly ICityService _service;
 
-    public CitiesController(CityService service)
+    public CitiesController(ICityService service)
     {
         _service = service;
     }
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> GetAll([FromQuery] CityQuery? query = null)
+    public async Task<ActionResult<ApiResponse<List<CityDto>>>> GetAll([FromQuery] CityQuery? query = null)
     {
         var cities = await _service.QueryAsync(query);
-        return OkResponse(cities);
+        return Ok(ApiResponse<List<CityDto>>.SuccessResponse(cities));
     }
 
     [HttpGet("{id}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<ActionResult<ApiResponse<CityDto>>> GetById(Guid id)
     {
-        var city = await _service.FindOneAsync(x => x.Id == id);
+        var city = await _service.FindOneDtoAsync(x => x.Id == id);
         if (city == null)
-            return NotFoundResponse("City not found");
+            return NotFound(ApiResponse<CityDto>.FailureResponse("City not found"));
 
-        return OkResponse(city);
+        return Ok(ApiResponse<CityDto>.SuccessResponse(city));
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateCityRequest request)
+    public async Task<ActionResult<ApiResponse<CityDto>>> Create([FromBody] CreateCityRequest request)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid) return BadRequest(ApiResponse<CityDto>.FailureResponse("Invalid data"));
 
         try
         {
-            var newCity = new City(
-                request.CountryId,
-                request.Name,
-                request.Latitude,
-                request.Longitude,
-                request.Timezone,
-                request.Population
-            );
-            
-            await _service.CreateAsync(newCity);
+            var result = await _service.CreateCityAsync(request);
             return CreatedAtAction(
                 nameof(GetById), 
-                new { id = newCity.Id }, 
-                ApiResponse<City>.SuccessResponse(newCity, "City created successfully")
+                new { id = result.Id }, 
+                ApiResponse<CityDto>.SuccessResponse(result, "City created successfully")
             );
         }
         catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
         {
-            return Conflict(ApiResponse<object>.FailureResponse("A city with the same name already exists in this country."));
+            return Conflict(ApiResponse<CityDto>.FailureResponse("A city with the same name already exists in this country."));
         }
         catch (ArgumentException ex)
         {
-            return BadRequestResponse(ex.Message);
+            return BadRequest(ApiResponse<CityDto>.FailureResponse(ex.Message));
         }
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCityRequest request)
+    public async Task<ActionResult<ApiResponse<CityDto>>> Update(Guid id, [FromBody] UpdateCityRequest request)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-
-        var city = await _service.FindOneAsync(x => x.Id == id);
-        if (city == null) return NotFoundResponse("City not found");
+        if (!ModelState.IsValid) return BadRequest(ApiResponse<CityDto>.FailureResponse("Invalid data"));
 
         try
         {
-            city.UpdateDetails(request.Name, request.Population, request.Timezone);
-            await _service.UpdateAsync(city);
-            return OkResponse(city, "City updated successfully");
+            var result = await _service.UpdateCityAsync(id, request);
+            return Ok(ApiResponse<CityDto>.SuccessResponse(result, "City updated successfully"));
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(ApiResponse<CityDto>.FailureResponse("City not found"));
         }
         catch (ArgumentException ex)
         {
-            return BadRequestResponse(ex.Message);
+            return BadRequest(ApiResponse<CityDto>.FailureResponse(ex.Message));
         }
         catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
         {
-            return Conflict(ApiResponse<object>.FailureResponse("Update failed: City name already exists."));
+            return Conflict(ApiResponse<CityDto>.FailureResponse("Update failed: City name already exists."));
         }
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<ActionResult<ApiResponse<object>>> Delete(Guid id)
     {
-        var city = await _service.FindOneAsync(x => x.Id == id);
-        if (city == null)
-            return NotFoundResponse("City not found");
-
-        await _service.DeleteAsync(city);
-        return OkResponse<object>(null, "City deleted successfully");
+        try
+        {
+            await _service.DeleteCityAsync(id);
+            return Ok(ApiResponse<object>.SuccessResponse(null, "City deleted successfully"));
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(ApiResponse<object>.FailureResponse("City not found"));
+        }
     }
 }

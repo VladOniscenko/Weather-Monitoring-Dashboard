@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Weather.Application.Common.DTOs;
 using Weather.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Weather.Application.Common.Models;
 
 namespace Weather.API.Controllers;
 
@@ -17,48 +18,48 @@ public class UsersController : BaseController
 
     [HttpPost("register", Name = "RegisterUser")]
     [AllowAnonymous]
-    public async Task<IActionResult> Register([FromBody] UserRegisterRequestDto request)
+    public async Task<ActionResult<ApiResponse<UserRegisterResponseDto>>> Register([FromBody] UserRegisterRequestDto request)
     {
         var result = await _userService.RegisterAsync(request);
-        return OkResponse(result, "Registration successful");
+        return Ok(ApiResponse<UserRegisterResponseDto>.SuccessResponse(result, "Registration successful"));
     }
 
     [HttpPost("login", Name = "LoginUser")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] UserLoginRequestDto request)
+    public async Task<ActionResult<ApiResponse<UserLoginResponseDto>>> Login([FromBody] UserLoginRequestDto request)
     {
         var token = await _userService.LoginAsync(request);
-        return OkResponse(token, "Login successful");
+        return Ok(ApiResponse<UserLoginResponseDto>.SuccessResponse(token, "Login successful"));
     }
 
     [HttpGet("me", Name = "GetCurrentUser")]
-    public async Task<IActionResult> GetMe()
+    public async Task<ActionResult<ApiResponse<UserDto>>> GetMe()
     {
         var user = await _userService.GetMeAsync();
-        return OkResponse(user);
+        return Ok(ApiResponse<UserDto>.SuccessResponse(user));
     }
 
     [HttpPatch("profile")]
-    public async Task<IActionResult> EditProfile([FromBody] UserUpdateRequestDto request)
+    public async Task<ActionResult<ApiResponse<UserDto>>> EditProfile([FromBody] UserUpdateRequestDto request)
     {
         var updatedUser = await _userService.UpdateProfileAsync(request);
-        return OkResponse(updatedUser, "Profile updated");
+        return Ok(ApiResponse<UserDto>.SuccessResponse(updatedUser, "Profile updated"));
     }
 
     [HttpGet("{Id}", Name = "GetUserById")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetUser(Guid Id)
+    public async Task<ActionResult<ApiResponse<UserDto>>> GetUser(Guid Id)
     {
         var user = await _userService.GetByIdAsync(Id);
-        if (user == null) return NotFoundResponse("User not found");
-        return OkResponse(user);
+        if (user == null) return NotFound(ApiResponse<UserDto>.FailureResponse("User not found"));
+        return Ok(ApiResponse<UserDto>.SuccessResponse(user));
     }
 
     [HttpGet(Name = "GetUsers")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Users([FromQuery] UserQuery? query = null)
+    public async Task<ActionResult<ApiResponse<List<UserDto>>>> Users([FromQuery] UserQuery? query = null)
     {
         var users = await _userService.GetAllAsync(query);
-        return OkResponse(users);
+        return Ok(ApiResponse<List<UserDto>>.SuccessResponse(users));
     }
 }

@@ -14,7 +14,8 @@ public static class DependencyInjection
         services.AddScoped<IWeatherReadingService, WeatherReadingService>();
         services.AddScoped<IWeatherSyncService, WeatherSyncService>();
         services.AddScoped<IUserService, UserService>();
-        services.AddScoped<CityService>();
+        services.AddScoped<ICityService, CityService>();
+        services.AddScoped<ICountryService, CountryService>();
 
         return services;
     }

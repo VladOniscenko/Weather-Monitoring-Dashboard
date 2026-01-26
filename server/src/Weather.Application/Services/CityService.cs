@@ -3,14 +3,15 @@ using System.Linq.Expressions;
 using Weather.Domain.Entities;
 using Weather.Application.Common.Interfaces;
 using Weather.Application.Common.DTOs;
+using Weather.Infrastructure.Mappers;
 
 namespace Weather.Application.Services;
 
-public class CityService : GenericService<City>
+public class CityService : GenericService<City>, ICityService
 {
     public CityService(IGenericRepository<City> repo) : base(repo) { }
 
-    public async Task<List<City>> QueryAsync(CityQuery? query = null)
+    public async Task<List<CityDto>> QueryAsync(CityQuery? query = null)
     {
         query ??= new CityQuery();
 
@@ -53,6 +54,51 @@ public class CityService : GenericService<City>
 
         // Pagination
         int skip = (query.Page - 1) * query.PageSize;
-        return all.Skip(skip).Take(query.PageSize).ToList();
+        return all.Skip(skip).Take(query.PageSize).Select(c => c.ToDto()).ToList();
+    }
+
+    public async Task<CityDto?> FindOneDtoAsync(Expression<Func<City, bool>> predicate)
+    {
+        var result = await base.FindOneAsync(predicate);
+        return result?.ToDto();
+    }
+
+    public async Task<CityDto> CreateCityAsync(CreateCityRequest request)
+    {
+        var newCity = new City(
+            request.CountryId,
+            request.Name,
+            request.Latitude,
+            request.Longitude,
+            request.Timezone,
+            request.Population
+        );
+
+        await CreateAsync(newCity);
+        return newCity.ToDto();
+    }
+
+    public async Task<CityDto> UpdateCityAsync(Guid id, UpdateCityRequest request)
+    {
+        var city = await FindOneAsync(x => x.Id == id);
+        if (city == null)
+        {
+            throw new KeyNotFoundException($"City with ID {id} not found.");
+        }
+
+        city.UpdateDetails(request.Name, request.Population, request.Timezone);
+        await UpdateAsync(city);
+        return city.ToDto();
+    }
+
+    public async Task DeleteCityAsync(Guid id)
+    {
+        var city = await FindOneAsync(x => x.Id == id);
+        if (city == null)
+        {
+            throw new KeyNotFoundException($"City with ID {id} not found.");
+        }
+
+        await DeleteAsync(city);
     }
 }

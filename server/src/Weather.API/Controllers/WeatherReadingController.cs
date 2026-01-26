@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Weather.Application.Common.Interfaces;
 using Weather.Application.Common.DTOs;
+using Weather.Application.Common.Models;
 
 namespace Weather.API.Controllers;
 
@@ -18,20 +19,20 @@ public class WeatherReadingController : BaseController
 
     [HttpGet(Name = "GetReadings")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetAll([FromQuery] ReadingQuery? query = null)
+    public async Task<ActionResult<ApiResponse<List<WeatherReadingDto>>>> GetAll([FromQuery] ReadingQuery? query = null)
     {
         var cities = await _service.QueryAsync(query);
-        return OkResponse(cities);
+        return Ok(ApiResponse<List<WeatherReadingDto>>.SuccessResponse(cities));
     }
 
     [HttpGet("{id}", Name = "GetReadingById")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<ActionResult<ApiResponse<WeatherReadingDto>>> GetById(Guid id)
     {
         var city = await _service.FindOneDtoAsync(x => x.Id == id);
         if (city == null)
-            return NotFoundResponse("Reading not found");
+            return NotFound(ApiResponse<WeatherReadingDto>.FailureResponse("Reading not found"));
 
-        return OkResponse(city);
+        return Ok(ApiResponse<WeatherReadingDto>.SuccessResponse(city));
     }
 }
