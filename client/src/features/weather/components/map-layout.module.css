@@ -1,0 +1,35 @@
+@keyframes marker-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--ring);
+    transform: scale(1);
+  }
+  70% {
+    box-shadow: 0 0 0 12px transparent;
+    transform: scale(1.1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    transform: scale(1);
+  }
+}
+
+.mapMarker {
+  background-color: var(--accent);
+  border: 1px solid var(--accent-fg);
+  border-radius: 9999px;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 15px var(--ring);
+
+  /* PULSE ANIMATION */
+  animation: marker-pulse var(--pulse-duration, 2s) ease-out infinite;
+  animation-delay: var(--pulse-delay, 0s);
+
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.mapMarker:hover {
+  animation-play-state: paused;
+  transform: scale(1.5);
+  filter: brightness(1.5);
+}

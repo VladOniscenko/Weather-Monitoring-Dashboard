@@ -13,7 +13,7 @@ type UseStationsParams = {
   zoom?: number;
 };
 
-export const useStation = ({
+export const useStations = ({
   cityId,
   name,
   minLng,
