@@ -177,9 +177,9 @@ button,
   background-color: var(--accent);
   color: var(--accent-fg);
   font-weight: 600;
-  padding: 0.625rem 1.25rem;
+  padding: 0rem 1.05rem;
   border-radius: var(--radius-base);
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
   cursor: pointer;
   transition: all var(--transition);
 }
@@ -198,7 +198,9 @@ button:active,
 
 /* D. Automated Cards/Panels */
 .card {
-  background-color: var(--bg-surface);
+  background-color: color-mix(in srgb,
+      var(--bg-surface) 80%,
+      transparent);
   border: 1px solid var(--border);
   border-radius: var(--radius-base);
   padding: 1.5rem;
@@ -262,6 +264,39 @@ select option {
   color-scheme: light;
 }
 
-.mapMarker{
+.mapMarker {
   background: var(--accent);
+}
+
+/* =========================================
+   Default Anchor Styling
+   ========================================= */
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.15em;
+  transition: color var(--transition),
+              text-decoration-color var(--transition),
+              opacity var(--transition);
+  cursor: pointer;
+}
+
+a:hover {
+  opacity: 0.9;
+  text-decoration-color: color-mix(
+    in srgb,
+    var(--accent) 70%,
+    transparent
+  );
+}
+
+a:active {
+  opacity: 0.8;
+}
+
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+  border-radius: 0.25rem;
 }

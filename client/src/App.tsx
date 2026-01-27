@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import { AppRouter } from "@/app/router";
-import { Navbar } from "@/components/layouts/Navbar";
+import { Navbar } from "@/components/layouts/Navbar/Navbar";
 
 import { ThemeProvider, useAppTheme } from '@/context/ThemeContext';
 
