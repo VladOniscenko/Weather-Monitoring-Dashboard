@@ -23,6 +23,12 @@ public record WeatherStationDto(
     DateTime LastSyncedAt
 );
 
+public record StationCordinateDto(
+    Guid Id,
+    double Latitude,
+    double Longitude
+);
+
 public class StationQuery
 {
     public Guid? CityId { get; set; }
@@ -40,5 +46,5 @@ public class StationQuery
         get => _pageSize;
         init => _pageSize = value;
     }
-    private readonly int _pageSize = 1000;
+    private readonly int _pageSize = 100;
 }

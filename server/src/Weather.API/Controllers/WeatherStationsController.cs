@@ -25,8 +25,16 @@ public class WeatherStationsController : BaseController
     [AllowAnonymous]
     public async Task<ActionResult<ApiResponse<List<WeatherStationDto>>>> GetAll([FromQuery] StationQuery? query = null)
     {
-        var countries = await _service.QueryAsync(query);
-        return Ok(ApiResponse<List<WeatherStationDto>>.SuccessResponse(countries));
+        var stations = await _service.QueryAsync(query);
+        return Ok(ApiResponse<List<WeatherStationDto>>.SuccessResponse(stations));
+    }
+
+    [HttpGet("/cordinates", Name = "GetAllStationsCordinates")]
+    [AllowAnonymous]
+    public async Task<ActionResult<ApiResponse<List<StationCordinateDto>>>> GetAllCordinates([FromQuery] StationQuery? query = null)
+    {
+        var stations = await _service.GetStationCordinatesAsync(query);
+        return Ok(ApiResponse<List<StationCordinateDto>>.SuccessResponse(stations));
     }
 
     [HttpGet("{id}")]

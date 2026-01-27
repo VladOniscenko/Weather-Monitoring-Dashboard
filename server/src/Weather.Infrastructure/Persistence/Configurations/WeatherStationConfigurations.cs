@@ -27,5 +27,8 @@ public class WeatherStationConfiguration : IEntityTypeConfiguration<WeatherStati
         
         entity.Property(s => s.LastSyncedAt)
             .HasDefaultValueSql("NOW()");
+
+        entity
+            .HasIndex(p => new { p.Latitude, p.Longitude });
     }
 }
