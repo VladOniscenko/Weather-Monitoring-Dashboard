@@ -1,29 +1,26 @@
 import { BrowserRouter } from "react-router-dom";
 import { AppRouter } from "@/app/router";
 import { Navbar } from "@/components/layouts/Navbar";
-import { useTheme } from "@/hooks/useTheme";
 
-export const App = () => {
-  const { theme } = useTheme();
+import { ThemeProvider, useAppTheme } from '@/context/ThemeContext';
+
+const AppContent = () => {
+  const { theme } = useAppTheme(); 
 
   return (
-    <BrowserRouter>
-      <div
-        className="theme-container flex flex-col min-h-screen transition-colors duration-500"
-        data-theme={theme}
-      >
+    <div className="theme-container min-h-screen" data-theme={theme}>
+      <BrowserRouter>
         <Navbar />
-
-        <main className="container mx-auto px-4 py-8">
-          <AppRouter />
-        </main>
-
-        <footer className="py-4 text-center text-sm opacity-50">
-          Weather Dashboard 2026
-        </footer>
-      </div>
-    </BrowserRouter>
+        <AppRouter />
+      </BrowserRouter>
+    </div>
   );
 };
+
+const App = () => (
+  <ThemeProvider>
+    <AppContent />
+  </ThemeProvider>
+);
 
 export default App;

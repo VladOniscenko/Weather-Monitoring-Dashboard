@@ -9,17 +9,17 @@
   /* Defaults (Dark Slate) */
   --bg-main: #0f172a;
   --bg-surface: #1e293b;
-  --bg-surface-hover: #334155; /* Automated hover state */
-  
+  --bg-surface-hover: #334155;
+
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  
-  --accent: #38bdf8;
-  --accent-fg: #0f172a; /* Text color on top of accent */
-  
+
+  --accent: #e6e6e6;
+  --accent-fg: #0f172a;
+
   --border: rgba(255, 255, 255, 0.1);
-  --ring: rgba(56, 189, 248, 0.5); /* Focus ring color */
-  
+  --ring: rgba(56, 189, 248, 0.5);
+
   --radius-base: 0.5rem;
   --transition: 0.2s ease-in-out;
 }
@@ -50,7 +50,7 @@
   --bg-surface-hover: #6272a4;
   --text-primary: #f8f8f2;
   --text-secondary: #bd93f9;
-  --accent: #ff79c6; /* Pink Dracula */
+  --accent: #ff79c6;
   --accent-fg: #282a36;
   --border: rgba(189, 147, 249, 0.2);
   --ring: rgba(255, 121, 198, 0.5);
@@ -63,7 +63,7 @@
   --bg-surface-hover: #434c5e;
   --text-primary: #eceff4;
   --text-secondary: #d8dee9;
-  --accent: #88c0d0; /* Frozen Blue */
+  --accent: #88c0d0;
   --accent-fg: #2e3440;
   --border: #4c566a;
   --ring: rgba(136, 192, 208, 0.4);
@@ -76,7 +76,7 @@
   --bg-surface-hover: #bcc0cc;
   --text-primary: #4c4f69;
   --text-secondary: #6c6f85;
-  --accent: #ea76cb; /* Pinkish */
+  --accent: #ea76cb;
   --accent-fg: #eff1f5;
   --border: #ccd0da;
   --ring: rgba(234, 118, 203, 0.4);
@@ -91,7 +91,7 @@
   --bg-surface-hover: #262626;
   --text-primary: #ffffff;
   --text-secondary: #a1a1aa;
-  --accent: #00f0ff; /* Neon Cyan */
+  --accent: #00f0ff;
   --accent-fg: #000000;
   --border: #333333;
   --ring: rgba(0, 240, 255, 0.5);
@@ -104,7 +104,7 @@
   --bg-surface-hover: #1c3022;
   --text-primary: #e6fcf5;
   --text-secondary: #84a98c;
-  --accent: #4ade80; /* Leaf Green */
+  --accent: #4ade80;
   --accent-fg: #052e16;
   --border: rgba(74, 222, 128, 0.15);
   --ring: rgba(74, 222, 128, 0.4);
@@ -117,13 +117,10 @@
   --color-main: var(--bg-main);
   --color-surface: var(--bg-surface);
   --color-surface-hover: var(--bg-surface-hover);
-  
   --color-txt: var(--text-primary);
   --color-txt-muted: var(--text-secondary);
-  
   --color-brand: var(--accent);
   --color-brand-fg: var(--accent-fg);
-  
   --color-border-line: var(--border);
 }
 
@@ -165,13 +162,15 @@ textarea:focus {
   box-shadow: 0 0 0 3px var(--ring);
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: var(--text-secondary);
   opacity: 0.7;
 }
 
 /* C. Automated Buttons */
-button, .btn {
+button,
+.btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -185,12 +184,14 @@ button, .btn {
   transition: all var(--transition);
 }
 
-button:hover, .btn:hover {
+button:hover,
+.btn:hover {
   filter: brightness(110%);
   transform: translateY(-1px);
 }
 
-button:active, .btn:active {
+button:active,
+.btn:active {
   transform: translateY(0);
   filter: brightness(95%);
 }
@@ -240,8 +241,8 @@ select {
 
 /* Specific fix for the dropdown menu / options */
 select option {
-  background-color: var(--bg-surface); /* Matches the card/input color */
-  color: var(--text-primary);           /* Forces readable text */
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
 }
 
 /* For Chrome/Safari/Edge, you can use color-scheme to help 
@@ -259,4 +260,8 @@ select option {
 [data-theme='light'],
 [data-theme='latte'] {
   color-scheme: light;
+}
+
+.mapMarker{
+  background: var(--accent);
 }
