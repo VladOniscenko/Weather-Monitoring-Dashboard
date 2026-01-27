@@ -17,6 +17,8 @@ export type { CreateCityRequest } from './models/CreateCityRequest';
 export type { CreateCountryRequest } from './models/CreateCountryRequest';
 export type { CreateWeatherStationRequest } from './models/CreateWeatherStationRequest';
 export type { ObjectApiResponse } from './models/ObjectApiResponse';
+export type { StationCordinateDto } from './models/StationCordinateDto';
+export type { StationCordinateDtoListApiResponse } from './models/StationCordinateDtoListApiResponse';
 export type { UpdateCityRequest } from './models/UpdateCityRequest';
 export type { UpdateCountryRequest } from './models/UpdateCountryRequest';
 export type { UpdateWeatherStationRequest } from './models/UpdateWeatherStationRequest';

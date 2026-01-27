@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CreateWeatherStationRequest } from '../models/CreateWeatherStationRequest';
+import type { StationCordinateDtoListApiResponse } from '../models/StationCordinateDtoListApiResponse';
 import type { UpdateWeatherStationRequest } from '../models/UpdateWeatherStationRequest';
 import type { WeatherStationDtoApiResponse } from '../models/WeatherStationDtoApiResponse';
 import type { WeatherStationDtoListApiResponse } from '../models/WeatherStationDtoListApiResponse';
@@ -63,6 +64,46 @@ export class WeatherStationsService {
             url: '/api/WeatherStations',
             body: requestBody,
             mediaType: 'application/json',
+        });
+    }
+    /**
+     * @param cityId
+     * @param name
+     * @param minLng
+     * @param maxLng
+     * @param minLat
+     * @param maxLat
+     * @param zoom
+     * @param page
+     * @param pageSize
+     * @returns StationCordinateDtoListApiResponse OK
+     * @throws ApiError
+     */
+    public static getAllStationsCordinates(
+        cityId?: string,
+        name?: string,
+        minLng?: number,
+        maxLng?: number,
+        minLat?: number,
+        maxLat?: number,
+        zoom?: number,
+        page?: number,
+        pageSize?: number,
+    ): CancelablePromise<StationCordinateDtoListApiResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/cordinates',
+            query: {
+                'CityId': cityId,
+                'Name': name,
+                'MinLng': minLng,
+                'MaxLng': maxLng,
+                'MinLat': minLat,
+                'MaxLat': maxLat,
+                'Zoom': zoom,
+                'Page': page,
+                'PageSize': pageSize,
+            },
         });
     }
     /**
