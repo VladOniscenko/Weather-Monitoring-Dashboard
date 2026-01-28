@@ -5,24 +5,18 @@ import { Loader2 } from 'lucide-react';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 
 // Assets
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import 'leaflet/dist/leaflet.css';
+import "leaflet/dist/leaflet.css";
 import styles from "./map-layout.module.css";
 
 // Hooks & Context
-import { useGeoLocation } from '@/hooks/useGeoLocation';
-import { useAppTheme } from '@/context/ThemeContext';
-import { useStationCordinates } from '@/features/weather/hooks/useStations';
+import { useGeoLocation } from "@/hooks/useGeoLocation";
+import { useAppTheme } from "@/context/ThemeContext";
+import { useStationCordinates } from "@/features/weather/hooks/useStations";
 
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
-
-const WORLD_BOUNDS: L.LatLngBoundsExpression = [[-90, -180], [90, 180]];
+const WORLD_BOUNDS: L.LatLngBoundsExpression = [
+  [-90, -180],
+  [90, 180],
+];
 
 /** * Sub-component to handle map interaction logic 
  */
@@ -34,24 +28,30 @@ const MapController = ({ onChange }: { onChange: (m: L.Map) => void }) => {
   return null;
 };
 
-const createCustomIcon = () => {
+const createCustomIcon = (currentLocation: boolean = false) => {
   return L.divIcon({
-    className: '',
-    html: `<div class="${styles.mapMarker}" style="
-        --pulse-delay: ${Math.random() * 2}s;
-        --pulse-duration: ${1.8 + Math.random()}s;
-      "></div>`,
+    html: `<div class="${currentLocation ? styles.currentLocationMapMarker : styles.mapMarker}"></div>`,
+    className: styles.customMarkerCluster,
   });
-}
+};
+
+const createClusterCustomIcon = (cluster: any) => {
+  return L.divIcon({
+    html: `<div>${cluster.getChildCount()}</div>`,
+    className: styles.customMarkerCluster,
+  });
+};
 
 const MapLayout: React.FC = () => {
   const { position, error } = useGeoLocation();
   const { theme } = useAppTheme();
+  const markerIcon = useMemo(() => createCustomIcon(), []);
+  const currentLocationMarkerIcon = useMemo(() => createCustomIcon(true), []);
 
   // Unified state to prevent double-renders during debounce
   const [mapState, setMapState] = useState({
     zoom: 13,
-    bounds: null as L.LatLngBounds | null
+    bounds: null as L.LatLngBounds | null,
   });
 
   const { data: stations, isFetching } = useStationCordinates({
@@ -59,20 +59,25 @@ const MapLayout: React.FC = () => {
     maxLng: mapState.bounds?.getNorthEast().lng,
     minLat: mapState.bounds?.getSouthWest().lat,
     maxLat: mapState.bounds?.getNorthEast().lat,
-    pageSize: 2000
+    pageSize: 500,
   });
 
   const tileUrl = useMemo(() => {
-    const variant = ['light', 'latte'].includes(theme) ? 'light' : 'dark';
+    const variant = ["light", "latte"].includes(theme) ? "light" : "dark";
     return `https://{s}.basemaps.cartocdn.com/${variant}_all/{z}/{x}/{y}{r}.png`;
   }, [theme]);
 
-  if (error) return <div className="flex items-center justify-center h-screen text-red-500">Error: {error}</div>;
-  if (!position) return <div className="flex items-center justify-center h-screen"><Loader2 className="animate-spin mr-2" /> Locating...</div>;
+  if (!position && !error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="animate-spin mr-2" /> Locating...
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-screen w-full">
-      {(isFetching) && (
+      {isFetching && (
         <div className="absolute bottom-4 left-4 z-[1000] flex items-center gap-2 px-4 py-2 bg-slate-900/90 text-white rounded-full shadow-lg backdrop-blur-md">
           <Loader2 className="w-4 h-4 animate-spin text-app-accent" />
           <span className="text-xs font-medium">Updating...</span>
@@ -80,7 +85,7 @@ const MapLayout: React.FC = () => {
       )}
 
       <MapContainer
-        center={[position.lat, position.lng]}
+        center={position ? [position.lat, position.lng] : [51.9244, 4.4777]} // set Rotterdam as default
         zoom={mapState.zoom}
         minZoom={3}
         maxZoom={18}
@@ -92,24 +97,34 @@ const MapLayout: React.FC = () => {
         <TileLayer url={tileUrl} attribution="&copy; CARTO" />
 
         <MapController
-          onChange={(m) => setMapState({ zoom: m.getZoom(), bounds: m.getBounds() })}
+          onChange={(m) =>
+            setMapState({ zoom: m.getZoom(), bounds: m.getBounds() })
+          }
         />
 
-        <MarkerClusterGroup 
-          chunkedLoading 
+        {position && (
+          <Marker
+            key="cloc"
+            position={[position.lat!, position.lng!]}
+            icon={currentLocationMarkerIcon}
+          />
+        )}
+
+        <MarkerClusterGroup
+          chunkedLoading
           maxClusterRadius={60}
-          spiderfyOnMaxZoom={true}
+          spiderfyOnMaxZoom
+          iconCreateFunction={createClusterCustomIcon}
+          removeOutsideVisibleBounds={true}
         >
           {stations?.map((station) => (
             <Marker
               key={station.id}
               position={[station.latitude!, station.longitude!]}
-              icon={createCustomIcon()}
-              eventHandlers={{ click: () => console.log(station) }}
+              icon={markerIcon}
             />
           ))}
         </MarkerClusterGroup>
-
       </MapContainer>
     </div>
   );
