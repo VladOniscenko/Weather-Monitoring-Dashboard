@@ -38,6 +38,7 @@ public class WeatherStationsController : BaseController
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public async Task<ActionResult<ApiResponse<WeatherStationDto>>> GetById(Guid id)
     {
         var station = await _service.FindOneDtoAsync(x => x.Id == id);
