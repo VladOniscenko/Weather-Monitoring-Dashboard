@@ -1,24 +1,25 @@
-import React, { useState, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import { Loader2 } from 'lucide-react';
-import MarkerClusterGroup from 'react-leaflet-cluster';
+import React, { useState, useMemo } from "react";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import L from "leaflet";
+import { Loader2 } from "lucide-react";
+import MarkerClusterGroup from "react-leaflet-cluster";
+import { type WeatherStationDto } from "@/client";
 
 // Assets
 import "leaflet/dist/leaflet.css";
-import styles from "./map-layout.module.css";
+import styles from "./MapView.module.css";
 
 // Hooks & Context
 import { useGeoLocation } from "@/hooks/useGeoLocation";
 import { useAppTheme } from "@/context/ThemeContext";
-import { useStationCordinates } from "@/features/weather/hooks/useStations";
+import { useWeatherStationsCoordinates } from "@/features/weather/hooks/useWeatherStations";
 
 const WORLD_BOUNDS: L.LatLngBoundsExpression = [
   [-90, -180],
   [90, 180],
 ];
 
-/** * Sub-component to handle map interaction logic 
+/** * Sub-component to handle map interaction logic
  */
 const MapController = ({ onChange }: { onChange: (m: L.Map) => void }) => {
   const map = useMapEvents({
@@ -42,7 +43,11 @@ const createClusterCustomIcon = (cluster: any) => {
   });
 };
 
-const MapLayout: React.FC = () => {
+interface MapViewProps {
+  setStation: (station: WeatherStationDto) => void;
+}
+
+const MapView: React.FC<MapViewProps> = ({ setStation }: MapViewProps) => {
   const { position, error } = useGeoLocation();
   const { theme } = useAppTheme();
   const markerIcon = useMemo(() => createCustomIcon(), []);
@@ -54,7 +59,7 @@ const MapLayout: React.FC = () => {
     bounds: null as L.LatLngBounds | null,
   });
 
-  const { data: stations, isFetching } = useStationCordinates({
+  const { data: stations, loading } = useWeatherStationsCoordinates({
     minLng: mapState.bounds?.getSouthWest().lng,
     maxLng: mapState.bounds?.getNorthEast().lng,
     minLat: mapState.bounds?.getSouthWest().lat,
@@ -77,7 +82,7 @@ const MapLayout: React.FC = () => {
 
   return (
     <div className="relative h-screen w-full">
-      {isFetching && (
+      {loading && (
         <div className="absolute bottom-4 left-4 z-[1000] flex items-center gap-2 px-4 py-2 bg-slate-900/90 text-white rounded-full shadow-lg backdrop-blur-md">
           <Loader2 className="w-4 h-4 animate-spin text-app-accent" />
           <span className="text-xs font-medium">Updating...</span>
@@ -122,6 +127,9 @@ const MapLayout: React.FC = () => {
               key={station.id}
               position={[station.latitude!, station.longitude!]}
               icon={markerIcon}
+              eventHandlers={{
+                click: () => setStation(station),
+              }}
             />
           ))}
         </MarkerClusterGroup>
@@ -130,4 +138,4 @@ const MapLayout: React.FC = () => {
   );
 };
 
-export default MapLayout;
+export default MapView;
