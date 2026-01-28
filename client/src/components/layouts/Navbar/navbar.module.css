@@ -1,0 +1,27 @@
+.navbar {
+    z-index: 1000;
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+}
+
+.hamburger {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.navbarContent {
+    z-index: 1001;
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    width: 20rem;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+}
