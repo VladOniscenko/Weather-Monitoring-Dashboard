@@ -21,22 +21,20 @@ export const useGeoLocation = () => {
     };
 
     const fail = (err: GeolocationPositionError) => {
-      console.log(err);
-      setPosition({ lat: 0, lng: 0 });
-      // switch (err.code) {
-      //   case err.PERMISSION_DENIED:
-      //     setError('User denied the request for Geolocation.');
-      //     break;
-      //   case err.POSITION_UNAVAILABLE:
-      //     setError('Location information is unavailable.');
-      //     break;
-      //   case err.TIMEOUT:
-      //     setError('The request to get user location timed out.');
-      //     break;
-      //   default:
-      //     setError('An unknown error occurred.');
-      //     break;
-      // }
+      switch (err.code) {
+        case err.PERMISSION_DENIED:
+          setError('User denied the request for Geolocation.');
+          break;
+        case err.POSITION_UNAVAILABLE:
+          setError('Location information is unavailable.');
+          break;
+        case err.TIMEOUT:
+          setError('The request to get user location timed out.');
+          break;
+        default:
+          setError('An unknown error occurred.');
+          break;
+      }
     };
 
     navigator.geolocation.getCurrentPosition(success, fail);
