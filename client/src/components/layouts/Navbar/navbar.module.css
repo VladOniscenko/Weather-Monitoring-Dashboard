@@ -1,27 +1,32 @@
 .navbar {
     z-index: 1000;
     position: absolute;
-    top: .5rem;
-    right: .5rem;
+    top: 1rem;
+    right: 1rem;
 }
 
-.hamburger {
+.settingsBtn {
     display: flex;
     justify-content: flex-end;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.settingsBtn:hover {
+    transform: rotate(90deg);
+    color: var(--accent);
 }
 
 .navbarContent {
     z-index: 1001;
     position: absolute;
+    width: 20rem;
 
     top: 0;
     right: 0;
-
-    width: 20rem;
-    transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-.header {
+.closeBtn {
     display: flex;
     justify-content: flex-end;
 }
