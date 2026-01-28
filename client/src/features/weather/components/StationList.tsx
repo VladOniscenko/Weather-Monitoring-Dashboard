@@ -1,12 +1,12 @@
-import { useStations } from '../hooks/useStations';
+import { useWeatherStations } from "@/features/weather/hooks/useWeatherStations";
 import { useState } from "react";
 import { type WeatherStationDto } from "@/client";
 
 export const StationList = () => {
   const [name, setName] = useState<string>();
-  const { data: stations, isLoading } = useStations({ name: name });
+  const { data: stations, loading } = useWeatherStations({ name: name });
 
-  if (isLoading) return <div>Loading stations…</div>;
+  if (loading) return <div>Loading stations…</div>;
   if (!stations) return <div>No Stations found</div>;
 
   return (
@@ -26,7 +26,7 @@ export const StationList = () => {
             </tr>
           </thead>
           <tbody>
-            {stations.map((station: WeatherStationDto) => {
+            {stations?.map((station: WeatherStationDto) => {
               const lastSynced = station.lastSyncedAt ? new Date(station.lastSyncedAt) : null;
               const minutesAgo = lastSynced ? Math.floor(
                 (Date.now() - lastSynced.getTime()) / 60000
