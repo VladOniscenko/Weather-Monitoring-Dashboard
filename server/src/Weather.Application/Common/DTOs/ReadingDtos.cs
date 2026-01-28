@@ -6,7 +6,7 @@ public class ReadingQuery
     public DateTime? End { get; set; }
 
     public Guid? StationId { get; init; }
-    public int Page { get; init; } = 1;
+    public int Page { get; init; } = 0;
     public int PageSize
     {
         get => _pageSize;

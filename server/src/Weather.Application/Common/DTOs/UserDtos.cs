@@ -44,7 +44,7 @@ public class UserQuery
     public string? Email { get; init; }
     public UserRole? Role { get; init; }
     public bool? IsActive { get; init; }
-    public int Page { get; init; } = 1;
+    public int Page { get; init; } = 0;
     public int PageSize { get; init; } = 20;
 }
 

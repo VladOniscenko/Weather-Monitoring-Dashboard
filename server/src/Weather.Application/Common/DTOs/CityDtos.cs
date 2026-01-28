@@ -7,13 +7,13 @@ public class CityQuery
     public string? Longitude { get; init; }
     public bool? LookInsideBounds { get; init; } = false;
     public Guid? CountryId { get; init; }
-    public int Page { get; init; } = 1;
+    public int Page { get; init; } = 0;
     public int PageSize
     {
         get => _pageSize;
         init => _pageSize = (value > 100) ? 100 : value;
     }
-    private readonly int _pageSize = 20;
+    private readonly int _pageSize = 100;
 }
 
 public record CityDto(

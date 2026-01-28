@@ -25,7 +25,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
             q = q.Where(u => u.IsActive == query.IsActive);
 
         return await q
-            .Skip((query.Page - 1) * query.PageSize)
+            .Skip(query.Page * query.PageSize)
             .Take(query.PageSize)
             .ToListAsync();
     }

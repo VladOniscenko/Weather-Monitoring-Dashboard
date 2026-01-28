@@ -53,7 +53,7 @@ public class CityService : GenericService<City>, ICityService
         var all = await _repo.FindAsync(predicate);
 
         // Pagination
-        int skip = (query.Page - 1) * query.PageSize;
+        int skip = query.Page * query.PageSize;
         return all.Skip(skip).Take(query.PageSize).Select(c => c.ToDto()).ToList();
     }
 

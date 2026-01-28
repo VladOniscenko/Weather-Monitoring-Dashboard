@@ -38,7 +38,7 @@ public class WeatherReadingService : GenericService<WeatherReading>, IWeatherRea
 
         var results = await _repo.FindAsync(
             predicate,
-            new FindOptions<WeatherReading> { Page = query.Page - 1, Take = query.PageSize }
+            new FindOptions<WeatherReading> { Page = query.Page, Take = query.PageSize }
         );
 
         return results.Select(x => x.ToDto()).ToList();
