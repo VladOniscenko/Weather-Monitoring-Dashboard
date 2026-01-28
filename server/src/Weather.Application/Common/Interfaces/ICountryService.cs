@@ -10,4 +10,5 @@ public interface ICountryService : IGenericService<Country>
     public Task<CountryDto> CreateCountryAsync(CreateCountryRequest request);
     public Task<CountryDto> UpdateCountryAsync(Guid id, UpdateCountryRequest request);
     public Task DeleteCountryAsync(Guid id);
+    public Task<List<CountryDto>> QueryAsync(CountryQuery? query = null);
 }

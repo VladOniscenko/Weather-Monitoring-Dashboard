@@ -24,13 +24,15 @@ public class CountriesController : BaseController
     }
 
     [HttpGet(Name = "GetAllCountries")]
-    public async Task<ActionResult<ApiResponse<List<CountryDto>>>> GetAll()
+    [AllowAnonymous]
+    public async Task<ActionResult<ApiResponse<List<CountryDto>>>> GetAll([FromQuery] CountryQuery? query = null)
     {
-        var countries = await _service.GetAllDtosAsync();
+        var countries = await _service.QueryAsync(query);
         return Ok(ApiResponse<List<CountryDto>>.SuccessResponse(countries));
     }
 
     [HttpGet("{id}", Name = "GetCountryById")]
+    [AllowAnonymous]
     public async Task<ActionResult<ApiResponse<CountryDto>>> GetById(Guid id)
     {
         var country = await _service.FindOneDtoAsync(x => x.Id == id);
