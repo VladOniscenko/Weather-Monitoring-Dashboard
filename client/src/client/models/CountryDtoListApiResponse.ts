@@ -9,4 +9,3 @@ export type CountryDtoListApiResponse = {
     data?: Array<CountryDto> | null;
     errors?: Array<string> | null;
 };
-

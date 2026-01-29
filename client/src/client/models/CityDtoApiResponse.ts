@@ -9,4 +9,3 @@ export type CityDtoApiResponse = {
     data?: CityDto;
     errors?: Array<string> | null;
 };
-

@@ -33,21 +33,21 @@ export class WeatherStationsService {
         maxLat?: number,
         zoom?: number,
         page?: number,
-        pageSize?: number,
+        pageSize?: number
     ): CancelablePromise<WeatherStationDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/WeatherStations',
             query: {
-                'CityId': cityId,
-                'Name': name,
-                'MinLng': minLng,
-                'MaxLng': maxLng,
-                'MinLat': minLat,
-                'MaxLat': maxLat,
-                'Zoom': zoom,
-                'Page': page,
-                'PageSize': pageSize,
+                CityId: cityId,
+                Name: name,
+                MinLng: minLng,
+                MaxLng: maxLng,
+                MinLat: minLat,
+                MaxLat: maxLat,
+                Zoom: zoom,
+                Page: page,
+                PageSize: pageSize,
             },
         });
     }
@@ -57,7 +57,7 @@ export class WeatherStationsService {
      * @throws ApiError
      */
     public static createStation(
-        requestBody?: CreateWeatherStationRequest,
+        requestBody?: CreateWeatherStationRequest
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -88,21 +88,21 @@ export class WeatherStationsService {
         maxLat?: number,
         zoom?: number,
         page?: number,
-        pageSize?: number,
+        pageSize?: number
     ): CancelablePromise<StationCordinateDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/cordinates',
             query: {
-                'CityId': cityId,
-                'Name': name,
-                'MinLng': minLng,
-                'MaxLng': maxLng,
-                'MinLat': minLat,
-                'MaxLat': maxLat,
-                'Zoom': zoom,
-                'Page': page,
-                'PageSize': pageSize,
+                CityId: cityId,
+                Name: name,
+                MinLng: minLng,
+                MaxLng: maxLng,
+                MinLat: minLat,
+                MaxLat: maxLat,
+                Zoom: zoom,
+                Page: page,
+                PageSize: pageSize,
             },
         });
     }
@@ -112,13 +112,13 @@ export class WeatherStationsService {
      * @throws ApiError
      */
     public static getApiWeatherStations(
-        id: string,
+        id: string
     ): CancelablePromise<WeatherStationDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/WeatherStations/{id}',
             path: {
-                'id': id,
+                id: id,
             },
         });
     }
@@ -130,13 +130,13 @@ export class WeatherStationsService {
      */
     public static updateStation(
         id: string,
-        requestBody?: UpdateWeatherStationRequest,
+        requestBody?: UpdateWeatherStationRequest
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/WeatherStations/{id}',
             path: {
-                'id': id,
+                id: id,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -147,14 +147,12 @@ export class WeatherStationsService {
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteStation(
-        id: string,
-    ): CancelablePromise<any> {
+    public static deleteStation(id: string): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/WeatherStations/{id}',
             path: {
-                'id': id,
+                id: id,
             },
         });
     }

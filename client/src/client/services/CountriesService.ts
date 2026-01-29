@@ -27,7 +27,7 @@ export class CountriesService {
      * @throws ApiError
      */
     public static createCountry(
-        requestBody?: CreateCountryRequest,
+        requestBody?: CreateCountryRequest
     ): CancelablePromise<CountryDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -42,13 +42,13 @@ export class CountriesService {
      * @throws ApiError
      */
     public static getCountryById(
-        id: string,
+        id: string
     ): CancelablePromise<CountryDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Countries/{id}',
             path: {
-                'id': id,
+                id: id,
             },
         });
     }
@@ -60,13 +60,13 @@ export class CountriesService {
      */
     public static updateCountry(
         id: string,
-        requestBody?: UpdateCountryRequest,
+        requestBody?: UpdateCountryRequest
     ): CancelablePromise<CountryDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/Countries/{id}',
             path: {
-                'id': id,
+                id: id,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -78,13 +78,13 @@ export class CountriesService {
      * @throws ApiError
      */
     public static deleteCountry(
-        id: string,
+        id: string
     ): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/Countries/{id}',
             path: {
-                'id': id,
+                id: id,
             },
         });
     }

@@ -10,4 +10,3 @@ export type UserDto = {
     createdAt?: string;
     role?: UserRole;
 };
-

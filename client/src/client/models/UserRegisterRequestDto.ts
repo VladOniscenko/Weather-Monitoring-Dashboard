@@ -7,4 +7,3 @@ export type UserRegisterRequestDto = {
     email?: string | null;
     password?: string | null;
 };
-

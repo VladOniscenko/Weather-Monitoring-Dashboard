@@ -18,7 +18,7 @@ export class UsersService {
      * @throws ApiError
      */
     public static registerUser(
-        requestBody?: UserRegisterRequestDto,
+        requestBody?: UserRegisterRequestDto
     ): CancelablePromise<UserRegisterResponseDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -33,7 +33,7 @@ export class UsersService {
      * @throws ApiError
      */
     public static loginUser(
-        requestBody?: UserLoginRequestDto,
+        requestBody?: UserLoginRequestDto
     ): CancelablePromise<UserLoginResponseDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -58,7 +58,7 @@ export class UsersService {
      * @throws ApiError
      */
     public static patchProfile(
-        requestBody?: UserUpdateRequestDto,
+        requestBody?: UserUpdateRequestDto
     ): CancelablePromise<UserDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -73,13 +73,13 @@ export class UsersService {
      * @throws ApiError
      */
     public static getUserById(
-        id: string,
+        id: string
     ): CancelablePromise<UserDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/{Id}',
             path: {
-                'Id': id,
+                Id: id,
             },
         });
     }

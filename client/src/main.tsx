@@ -12,24 +12,23 @@ OpenAPI.BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 // 2. Inject the Token dynamically
 // This function runs before every request to attach the token
 OpenAPI.TOKEN = async () => {
-  return localStorage.getItem('token') || '';
+    return localStorage.getItem('token') || '';
 };
 
-
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+            retry: 1,
+        },
     },
-  },
-})
+});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <App />
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+    </React.StrictMode>
 );

@@ -9,4 +9,3 @@ export type WeatherReadingDtoListApiResponse = {
     data?: Array<WeatherReadingDto> | null;
     errors?: Array<string> | null;
 };
-

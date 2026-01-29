@@ -6,4 +6,3 @@ export type UserLoginResponseDto = {
     token?: string | null;
     expiresAt?: string;
 };
-

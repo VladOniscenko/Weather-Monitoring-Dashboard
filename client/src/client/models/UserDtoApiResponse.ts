@@ -9,4 +9,3 @@ export type UserDtoApiResponse = {
     data?: UserDto;
     errors?: Array<string> | null;
 };
-

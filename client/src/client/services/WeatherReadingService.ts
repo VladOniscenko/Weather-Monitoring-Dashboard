@@ -22,17 +22,17 @@ export class WeatherReadingService {
         end?: string,
         stationId?: string,
         page?: number,
-        pageSize?: number,
+        pageSize?: number
     ): CancelablePromise<WeatherReadingDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/WeatherReading',
             query: {
-                'Start': start,
-                'End': end,
-                'StationId': stationId,
-                'Page': page,
-                'PageSize': pageSize,
+                Start: start,
+                End: end,
+                StationId: stationId,
+                Page: page,
+                PageSize: pageSize,
             },
         });
     }
@@ -42,13 +42,13 @@ export class WeatherReadingService {
      * @throws ApiError
      */
     public static getReadingById(
-        id: string,
+        id: string
     ): CancelablePromise<WeatherReadingDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/WeatherReading/{id}',
             path: {
-                'id': id,
+                id: id,
             },
         });
     }

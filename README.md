@@ -15,16 +15,17 @@ A professional Full-Stack monitoring solution that tracks and visualizes real-ti
 ## 🏗️ Tech Stack
 
 ### Backend (.NET 8)
-- ASP.NET Core Web API  
-- Entity Framework Core (PostgreSQL)  
-- JWT Authentication & BCrypt.Net  
+
+- ASP.NET Core Web API
+- Entity Framework Core (PostgreSQL)
+- JWT Authentication & BCrypt.Net
 - Background Services (IHostedService)
 
 ### Frontend (React)
-- Vite & Tailwind CSS  
-- Recharts  
-- Axios  
 
+- Vite & Tailwind CSS
+- Recharts
+- Axios
 
 ---
 
@@ -47,8 +48,9 @@ Run:
     docker-compose up --build
 
 Endpoints:
-- API: http://localhost:5001  
-- Frontend: http://localhost:3000  
+
+- API: http://localhost:5001
+- Frontend: http://localhost:3000
 
 ---
 
@@ -60,9 +62,9 @@ One-to-Many relationship between Weather Stations and Weather Readings.
 
 ## 🔒 Security
 
-- BCrypt password hashing  
-- JWT Bearer authentication  
-- Global exception middleware  
+- BCrypt password hashing
+- JWT Bearer authentication
+- Global exception middleware
 
 ---
 

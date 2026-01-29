@@ -7,4 +7,3 @@ export type StationCordinateDto = {
     latitude?: number;
     longitude?: number;
 };
-

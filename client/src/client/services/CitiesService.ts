@@ -29,19 +29,19 @@ export class CitiesService {
         lookInsideBounds?: boolean,
         countryId?: string,
         page?: number,
-        pageSize?: number,
+        pageSize?: number
     ): CancelablePromise<CityDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Cities',
             query: {
-                'Name': name,
-                'Latitude': latitude,
-                'Longitude': longitude,
-                'LookInsideBounds': lookInsideBounds,
-                'CountryId': countryId,
-                'Page': page,
-                'PageSize': pageSize,
+                Name: name,
+                Latitude: latitude,
+                Longitude: longitude,
+                LookInsideBounds: lookInsideBounds,
+                CountryId: countryId,
+                Page: page,
+                PageSize: pageSize,
             },
         });
     }
@@ -51,7 +51,7 @@ export class CitiesService {
      * @throws ApiError
      */
     public static postApiCities(
-        requestBody?: CreateCityRequest,
+        requestBody?: CreateCityRequest
     ): CancelablePromise<CityDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -66,13 +66,13 @@ export class CitiesService {
      * @throws ApiError
      */
     public static getApiCities1(
-        id: string,
+        id: string
     ): CancelablePromise<CityDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Cities/{id}',
             path: {
-                'id': id,
+                id: id,
             },
         });
     }
@@ -84,13 +84,13 @@ export class CitiesService {
      */
     public static putApiCities(
         id: string,
-        requestBody?: UpdateCityRequest,
+        requestBody?: UpdateCityRequest
     ): CancelablePromise<CityDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/Cities/{id}',
             path: {
-                'id': id,
+                id: id,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -102,13 +102,13 @@ export class CitiesService {
      * @throws ApiError
      */
     public static deleteApiCities(
-        id: string,
+        id: string
     ): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/Cities/{id}',
             path: {
-                'id': id,
+                id: id,
             },
         });
     }

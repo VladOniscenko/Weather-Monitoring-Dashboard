@@ -15,4 +15,3 @@ export type CreateCountryRequest = {
     independent?: boolean;
     landlocked?: boolean;
 };
-

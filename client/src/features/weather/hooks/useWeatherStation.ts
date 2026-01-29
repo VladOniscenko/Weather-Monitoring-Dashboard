@@ -1,34 +1,33 @@
-import { useState, useEffect } from "react";
-import { WeatherStationsService, type WeatherStationDto } from "@/client";
+import { useState, useEffect } from 'react';
+import { WeatherStationsService, type WeatherStationDto } from '@/client';
 
 export function useWeatherStation(id: string) {
-  const [data, setData] =
-    useState<WeatherStationDto>();
-  const [loading, setLoading] = useState(false);
+    const [data, setData] = useState<WeatherStationDto>();
+    const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!id) return;
+    useEffect(() => {
+        if (!id) return;
 
-    let cancelled = false;
+        let cancelled = false;
 
-    async function fetchStation() {
-      setLoading(true);
+        async function fetchStation() {
+            setLoading(true);
 
-      try {
-        const response =
-          await WeatherStationsService.getApiWeatherStations(id);
-        if (!cancelled) setData(response.data);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
+            try {
+                const response =
+                    await WeatherStationsService.getApiWeatherStations(id);
+                if (!cancelled) setData(response.data);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        }
 
-    fetchStation();
+        fetchStation();
 
-    return () => {
-      cancelled = true;
-    };
-  }, [id]);
+        return () => {
+            cancelled = true;
+        };
+    }, [id]);
 
-  return { data, loading };
+    return { data, loading };
 }

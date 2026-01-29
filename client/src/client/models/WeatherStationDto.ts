@@ -10,4 +10,3 @@ export type WeatherStationDto = {
     longitude?: number;
     lastSyncedAt?: string;
 };
-
