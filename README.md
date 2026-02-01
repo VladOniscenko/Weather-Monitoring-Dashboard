@@ -1,71 +1,81 @@
-# Weather Monitoring Dashboard
+# 🌍 Weather Station Network
 
-A professional Full-Stack monitoring solution that tracks and visualizes real-time weather data. Built with a .NET 8 Clean Architecture backend and a React frontend.
+One day, for a university project, I built a mini weather station from scratch. I wanted to monitor the environment around me, but I quickly hit a wall: there wasn’t a dedicated, accessible platform to visualize my own hardware's measurements or share that data with others.
 
-## 🚀 Key Features
-
-- **Automated Data Accumulator**: Background worker syncs with OpenWeatherMap API every 10 minutes.
-- **Secure Identity System**: JWT authentication with RBAC.
-- **Interactive Analytics**: Charts for temperature, humidity, and wind (Recharts).
-- **Station Management**: Admin interface for global stations.
-- **3-Layer Architecture**: Domain, Infrastructure, API.
+**That was the spark for this project.** I built this application to bridge the gap between hardware and data visualization. It’s an interactive, community-driven platform where people can register their own weather stations, collect environmental data, and share it with the world via an interactive global map.
 
 ---
 
-## 🏗️ Tech Stack
+## 🚀 The Vision
 
-### Backend (.NET 8)
-
-- ASP.NET Core Web API
-- Entity Framework Core (PostgreSQL)
-- JWT Authentication & BCrypt.Net
-- Background Services (IHostedService)
-
-### Frontend (React)
-
-- Vite & Tailwind CSS
-- Recharts
-- Axios
+This isn't just a weather app; it's a **Station-as-a-Service** platform. Users can explore a worldwide map of markers. Clicking a station reveals a professional floating dashboard with high-fidelity, real-time measurements—providing immediate insight into micro-climates across the globe.
 
 ---
 
-## 🛠️ Getting Started
+## 🏗️ Architectural Excellence (N-Layer)
 
-### 1. Configuration
+To ensure this platform is "portfolio-ready" and scalable, I implemented a strict **N-Layer Architecture** (Domain, Application, Infrastructure, API). This separates the business logic from the technical implementation, making the system highly maintainable.
+
+### Backend Strategy (C# / .NET 8)
+
+- **Clean Data Flow**: Powered by **Entity Framework Core** and **PostgreSQL**
+- **Identity & Security**: Custom-built **JWT Authentication** with RBAC (Role-Based Access Control)
+- **Background Processing**: IHostedServices act as data accumulators, ensuring readings are synced and processed without blocking user interactions
+
+### Frontend Strategy (React & Vite)
+
+- **Interactive UX**: A custom map implementation with high-performance markers
+- **Modern Styling**: Utility-first CSS with **Tailwind 4.0** and a custom-built **Theme Engine** (supporting Dracula, Nord, and more)
+- **Real-time Feel**: Precision components designed to show data measured just minutes ago
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Language/Framework** | C# / .NET 8 / React (Vite) |
+| **Persistence** | PostgreSQL + EF Core |
+| **Security** | JWT (JSON Web Tokens) + BCrypt |
+| **DevOps** | Docker & Docker Compose |
+| **Styling** | Tailwind CSS + Lucide Icons |
+
+---
+
+## 🚦 Getting Started
+
+### 1. Environment Configuration
 
 Create a `.env` file in the root directory:
 
-    POSTGRES_USER=postgres
-    POSTGRES_PASSWORD=your_secure_password
-    POSTGRES_DB=weatherdb
-    JWT_SECRET=your_32_character_secret_key
-    OPENWEATHER_API_KEY=your_api_key
+    POSTGRES_USER=username
+    POSTGRES_PASSWORD=password
+    POSTGRES_DB=weather
+    POSTGRES_PORT=5432
+    ASPNETCORE_ENVIRONMENT=environment Development or Production
+    JWT_SECRET=jwt_secret
+    OPEN_WEATHET_API_KEY=api_key
 
-### 2. Execution
+### 2. Launch with Docker
 
-Run:
+The entire ecosystem is containerized for seamless deployment:
 
     docker-compose up --build
 
-Endpoints:
+**Available Services:**
 
-- API: http://localhost:5001
-- Frontend: http://localhost:3000
-
----
-
-## 📊 Data Design
-
-One-to-Many relationship between Weather Stations and Weather Readings.
+- **API Gateway**: http://localhost:5001
+- **Client Dashboard**: http://localhost:3000
 
 ---
 
-## 🔒 Security
+## 🔒 Security & Performance
 
-- BCrypt password hashing
-- JWT Bearer authentication
-- Global exception middleware
+- **N-Layer Decoupling**: Business rules are isolated from the database and API
+- **Global Error Handling**: Middleware ensures consistent API responses and logging
+- **Dockerization**: Every component—from the Postgres DB to the React frontend—is isolated, ensuring it runs on any machine
 
 ---
 
-Developed by Vlad
+**Developed by Vlad**  
+*Building the bridge between hardware measurements and beautiful data.*
