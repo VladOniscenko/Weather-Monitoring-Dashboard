@@ -2,7 +2,7 @@ namespace Weather.Application.Common.DTOs;
 
 public class ReadingQuery
 {
-    public DateTime? Start { get; set; } = DateTime.UtcNow;
+    public DateTime? Start { get; set; }
     public DateTime? End { get; set; }
 
     public Guid? StationId { get; init; }
@@ -12,5 +12,5 @@ public class ReadingQuery
         get => _pageSize;
         init => _pageSize = (value > 100) ? 100 : value;
     }
-    private readonly int _pageSize = 20;
+    private readonly int _pageSize = 100;
 }
