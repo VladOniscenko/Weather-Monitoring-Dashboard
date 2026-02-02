@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { type WeatherStationDto } from '@/client';
 
-import MapView from './MapView.tsx';
-import StatioDetails from './StationDetails.tsx';
+import MapView from './MapView/MapView.tsx';
+import StatioDetails from './StationDetails/StationDetails.tsx';
 
 const Map: React.FC = () => {
     const [open, setOpen] = useState<boolean>(false);
