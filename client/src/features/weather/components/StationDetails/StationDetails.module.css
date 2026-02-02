@@ -1,0 +1,92 @@
+.container {
+    width: 400px;
+    overflow: hidden;
+    padding: 0 !important;
+}
+
+.floating {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1000;
+}
+
+.header {
+    padding: 24px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.iconWrapper {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 4px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+}
+
+.statsGrid {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: color-mix(in srgb, var(--bg-main) 50%, transparent);
+    border-radius: 12px;
+}
+
+.statGroup {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.statGroup:not(:last-child) {
+    border-right: 1px solid var(--border);
+    padding-right: 8px;
+}
+
+.statBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.statBox span {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 2px 0;
+}
+
+.statBox label {
+    font-size: 9px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+}
+
+.statBox small {
+    font-size: 9px;
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+.historySection {
+    max-height: 240px;
+    padding: 16px 0;
+    overflow-y: auto;
+}
+
+.readingRow {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.selectedRow {
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-surface));
+    border-left: 4px solid var(--accent);
+}
