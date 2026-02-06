@@ -176,13 +176,14 @@ textarea::placeholder {
 /* C. Automated Buttons */
 button,
 .btn {
+    min-width: fit-content;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background-color: var(--accent);
     color: var(--accent-fg);
     font-weight: 600;
-    padding: 0rem 1.05rem;
+    padding: .5rem 2rem;
     border-radius: var(--radius-base);
     border: 1px solid var(--border);
     cursor: pointer;
@@ -304,4 +305,8 @@ a:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px var(--ring);
     border-radius: 0.25rem;
+}
+
+.lucide {
+   color: var(--text-secondary);
 }
