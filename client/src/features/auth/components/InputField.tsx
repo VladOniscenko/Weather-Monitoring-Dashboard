@@ -18,6 +18,7 @@ const InputField = ({
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
+                required
             />
         </div>
     );
