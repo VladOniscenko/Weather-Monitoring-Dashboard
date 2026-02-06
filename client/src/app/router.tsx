@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Map from '@/features/weather/components/Map';
-// import { LoginPage } from '@/features/auth/pages/LoginPage';
+import { AuthPage } from '@/features/auth/components';
 
 export const AppRouter = () => {
     return (
@@ -8,6 +8,8 @@ export const AppRouter = () => {
             {/* Public Routes */}
             <Route path="/" element={<>Home</>} />
             <Route path="/map" element={<Map />} />
+            <Route path="/login" element={<AuthPage isRegister={false} />} />
+            <Route path="/register" element={<AuthPage isRegister={true} />} />
 
             {/* Auth Routes */}
             {/* <Route path="/login" element={<LoginPage />} /> */}
