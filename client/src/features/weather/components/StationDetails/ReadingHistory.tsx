@@ -26,7 +26,7 @@ export default function ReadingHistory({
                         onClick={() =>
                             onSelect(readings[readings.length - 1]?.id)
                         }
-                        className="text-[10px] text-brand font-bold hover:underline"
+                        className="text-[10px] h-0 text-brand font-bold hover:underline"
                     >
                         Return to Live
                     </button>
