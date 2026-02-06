@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UsersService } from '@/client';
+import { OpenAPI, UsersService } from '@/client';
 import { useAuth } from '@/hooks/useAuth';
 
 export const useLogin = () => {
@@ -25,6 +25,8 @@ export const useLogin = () => {
                 throw new Error(response.message || 'Login failed');
             }
 
+            OpenAPI.TOKEN = response.data.token; // add token to the calls
+            
             // retrieve current user data
             const currentUser = await UsersService.getCurrentUser();
             if(!currentUser || !currentUser.data){

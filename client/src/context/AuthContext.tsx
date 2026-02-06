@@ -1,4 +1,4 @@
-import { type UserDto, UsersService } from '@/client';
+import { OpenAPI, type UserDto, UsersService } from '@/client';
 import { createContext, useState, useEffect, type ReactNode } from 'react';
 
 interface AuthContextType {
@@ -26,6 +26,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const storedToken = localStorage.getItem('token');
             if (storedToken) {
                 try {
+                    OpenAPI.TOKEN = storedToken; // add token to the calls
+
                     // retrieve current user data
                     const currentUser = await UsersService.getCurrentUser();
                     if (!currentUser || !currentUser.data) {
@@ -36,6 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     setUser(currentUser.data);
                 } catch (error) {
                     console.error('Token invalid', error);
+                    OpenAPI.TOKEN = undefined;
                     logout();
                 }
             }
