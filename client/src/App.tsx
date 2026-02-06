@@ -3,6 +3,7 @@ import { AppRouter } from '@/app/router';
 import { Navbar } from '@/components/layouts/Navbar/Navbar';
 
 import { ThemeProvider, useAppTheme } from '@/context/ThemeContext';
+import { AuthProvider } from './context/AuthContext';
 
 const AppContent = () => {
     const { theme } = useAppTheme();
@@ -18,9 +19,11 @@ const AppContent = () => {
 };
 
 const App = () => (
-    <ThemeProvider>
-        <AppContent />
-    </ThemeProvider>
+    <AuthProvider>
+        <ThemeProvider>
+            <AppContent />
+        </ThemeProvider>
+    </AuthProvider>
 );
 
 export default App;
