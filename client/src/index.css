@@ -22,6 +22,14 @@
 
     --radius-base: 0.5rem;
     --transition: 0.2s ease-in-out;
+
+    /* Error (default) */
+    --error-bg: #2a1215;
+    --error-bg-hover: #3a161a;
+    --error-border: rgba(239, 68, 68, 0.35);
+    --error-text: #fca5a5;
+    --error-text-strong: #fecaca;
+    --error-accent: #ef4444;
 }
 
 /* =========================================
@@ -183,7 +191,7 @@ button,
     background-color: var(--accent);
     color: var(--accent-fg);
     font-weight: 600;
-    padding: .5rem 2rem;
+    padding: 0.5rem 2rem;
     border-radius: var(--radius-base);
     border: 1px solid var(--border);
     cursor: pointer;
@@ -308,5 +316,19 @@ a:focus-visible {
 }
 
 .lucide {
-   color: var(--text-secondary);
+    color: var(--text-secondary);
+}
+
+.error {
+    background-color: var(--error-bg);
+    border: 1px solid var(--error-border);
+    border-radius: var(--radius-base);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--error-text);
+    text-align: center;
+}
+
+.error strong {
+    color: var(--error-text-strong);
 }
