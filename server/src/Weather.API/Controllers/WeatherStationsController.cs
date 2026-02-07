@@ -65,17 +65,13 @@ public class WeatherStationsController : BaseController
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWeatherStationRequest request)
     {
         await _service.UpdateAsync(id, request);
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete("{id}", Name = "DeleteStation")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var station = await _service.FindOneAsync(x => x.Id == id);
-        if (station == null)
-            return NotFoundResponse("WeatherStation not found");
-
-        await _service.DeleteAsync(station);
-        return OkResponse<object>("", "WeatherStation deleted successfully");
+        await _service.DeleteAsync(id);
+        return NoContent();
     }
 }

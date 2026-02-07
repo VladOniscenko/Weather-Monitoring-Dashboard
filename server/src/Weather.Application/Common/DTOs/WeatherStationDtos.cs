@@ -40,6 +40,7 @@ public class StationQuery
     public double? MinLat { get; set; }
     public double? MaxLat { get; set; }
     public int? Zoom { get; set; }
+    public Guid? UserId { get; set; }
 
     public int Page { get; init; } = 0;
     public int PageSize

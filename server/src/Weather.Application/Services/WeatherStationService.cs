@@ -73,12 +73,25 @@ public class WeatherStationService : GenericService<WeatherStation>, IWeatherSta
         return true;
     }
 
+    public async Task DeleteAsync(Guid id)
+    {
+        var station = await FindOneAsync(x => x.Id == id) ?? throw new KeyNotFoundException("WeatherStation not found");
+        if (station.UserId != _currentUser.Id)
+            throw new UnauthorizedAccessException("Not allowed");
+
+        await _stationRepo.DeleteAsync(station);
+    }
+
     private async Task<List<WeatherStation>> GetStationsAsync(StationQuery? query = null)
     {
         query ??= new StationQuery();
 
         // 1. Build the Predicate (Filter Logic)
         Expression<Func<WeatherStation, bool>> predicate = ws => true;
+
+        // --- USER FILTER ---
+        if (query.UserId.HasValue)
+            predicate = Combine(predicate, ws => ws.UserId == query.UserId);
 
         // --- LATITUDE FILTER ---
         if (query.MinLat.HasValue && query.MaxLat.HasValue)
