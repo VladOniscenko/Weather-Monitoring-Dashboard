@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
     WeatherStationsService,
-    type WeatherStationDto,
-    type StationCordinateDto,
+    type WeatherStationDtoPagedResponse,
+    type StationCordinateDtoPagedResponse,
 } from '@/client';
 
 interface UseWeatherStationsParams {
@@ -15,10 +15,11 @@ interface UseWeatherStationsParams {
     zoom?: number;
     page?: number;
     pageSize?: number;
+    userId?: string
 }
 
 export function useWeatherStations(params?: UseWeatherStationsParams) {
-    const [data, setData] = useState<WeatherStationDto[]>([]);
+    const [data, setData] = useState<WeatherStationDtoPagedResponse | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<unknown>(null);
 
@@ -38,12 +39,13 @@ export function useWeatherStations(params?: UseWeatherStationsParams) {
                     params?.minLat,
                     params?.maxLat,
                     params?.zoom,
+                    params?.userId,
                     params?.page,
-                    params?.pageSize
+                    params?.pageSize,
                 );
 
                 if (!cancelled) {
-                    setData(response.data ?? []);
+                    setData(response.data ?? null);
                 }
             } catch (err) {
                 if (!cancelled) setError(err);
@@ -65,7 +67,7 @@ export function useWeatherStations(params?: UseWeatherStationsParams) {
 export function useWeatherStationsCoordinates(
     params?: UseWeatherStationsParams
 ) {
-    const [data, setData] = useState<StationCordinateDto[]>([]);
+    const [data, setData] = useState<StationCordinateDtoPagedResponse | null>(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -83,12 +85,13 @@ export function useWeatherStationsCoordinates(
                         params?.minLat,
                         params?.maxLat,
                         params?.zoom,
+                        params?.userId,
                         params?.page,
-                        params?.pageSize
+                        params?.pageSize,
                     );
 
                 if (!cancelled) {
-                    setData(response.data || []);
+                    setData(response.data || null);
                 }
             } finally {
                 if (!cancelled) setLoading(false);
