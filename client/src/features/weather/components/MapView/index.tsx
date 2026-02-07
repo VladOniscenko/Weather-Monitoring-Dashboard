@@ -196,7 +196,7 @@ const MapView: React.FC<MapViewProps> = ({ setStation }: MapViewProps) => {
                     removeOutsideVisibleBounds={true}
                     animate={true}
                 >
-                    {stations?.map((station) => (
+                    {stations?.items?.map((station) => (
                         <StationMarker 
                             key={station.id}
                             station={station}
