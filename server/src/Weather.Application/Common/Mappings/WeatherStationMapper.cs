@@ -7,6 +7,7 @@ public static class WeatherStationMapper
     public static WeatherStationDto ToDto(this WeatherStation ws) => new (
         ws.Id,
         ws.CityId,
+        ws.UserId,
         ws.Name,
         ws.Latitude,
         ws.Longitude,
