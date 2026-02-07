@@ -16,23 +16,29 @@ public class WeatherStationService : GenericService<WeatherStation>, IWeatherSta
         _currentUser = currentUser;
     }
 
-    public async Task<List<WeatherStationDto>> QueryAsync(StationQuery? query = null)
+    public async Task<PagedResponse<WeatherStationDto>> QueryAsync(StationQuery? query = null)
     {
-        query ??= new StationQuery();
-        var stations = await GetStationsAsync(query);
-        return stations.Select(x => x.ToDto()).ToList();
+        return await QueryPagedAsync(query);
     }
 
-
-    public async Task<List<StationCordinateDto>> GetStationCordinatesAsync(StationQuery? query = null)
+    public async Task<PagedResponse<StationCordinateDto>> GetStationCordinatesAsync(StationQuery? query = null)
     {
-        query ??= new StationQuery();
-        var stations = await GetStationsAsync(query);
-        return stations.Select(x => new StationCordinateDto(
-            x.Id,
-            x.Latitude,
-            x.Longitude
-        )).ToList();
+        // Fetch paged stations (DTOs) from service
+        var pagedStations = await QueryPagedAsync(query);
+
+        // Map to coordinates while preserving pagination info
+        var pagedCoordinates = new PagedResponse<StationCordinateDto>(
+            pagedStations.Items.Select(x => new StationCordinateDto(
+                x.Id,
+                x.Latitude,
+                x.Longitude
+            )).ToList(),
+            currentPage: pagedStations.CurrentPage,
+            totalPages: pagedStations.TotalPages,
+            totalItems: pagedStations.TotalItems
+        );
+
+        return pagedCoordinates;
     }
 
     public async Task<WeatherStationDto?> FindOneDtoAsync(Expression<Func<WeatherStation, bool>> predicate)
@@ -82,11 +88,11 @@ public class WeatherStationService : GenericService<WeatherStation>, IWeatherSta
         await _stationRepo.DeleteAsync(station);
     }
 
-    private async Task<List<WeatherStation>> GetStationsAsync(StationQuery? query = null)
+    public async Task<PagedResponse<WeatherStationDto>> QueryPagedAsync(StationQuery? query = null)
     {
         query ??= new StationQuery();
 
-        // 1. Build the Predicate (Filter Logic)
+        // 1. Build the base predicate (filter)
         Expression<Func<WeatherStation, bool>> predicate = ws => true;
 
         // --- USER FILTER ---
@@ -99,8 +105,7 @@ public class WeatherStationService : GenericService<WeatherStation>, IWeatherSta
             predicate = Combine(predicate, ws => ws.Latitude >= query.MinLat.Value && ws.Latitude <= query.MaxLat.Value);
         }
 
-        // --- LONGITUDE FILTER (CRITICAL FOR PRECISION) ---
-        // This handles the "World Wrapping" issue (International Date Line)
+        // --- LONGITUDE FILTER (handles International Date Line)
         if (query.MinLng.HasValue && query.MaxLng.HasValue)
         {
             if (query.MinLng <= query.MaxLng)
@@ -109,23 +114,40 @@ public class WeatherStationService : GenericService<WeatherStation>, IWeatherSta
                 predicate = Combine(predicate, ws => ws.Longitude >= query.MinLng.Value || ws.Longitude <= query.MaxLng.Value);
         }
 
-        // --- SEARCH FILTERS ---
+        // --- CITY FILTER ---
         if (query.CityId.HasValue)
             predicate = Combine(predicate, ws => ws.CityId == query.CityId.Value);
 
+        // --- NAME SEARCH FILTER ---
         if (!string.IsNullOrWhiteSpace(query.Name))
             predicate = Combine(predicate, ws => ws.Name.Contains(query.Name));
 
+        // --- Count total matching stations ---
+        var totalStations = await _repo.CountAsync(predicate);
+
+        // --- Calculate paging ---
+        var page = query.Page;
+        var pageSize = query.PageSize;
+        var totalPages = (int)Math.Ceiling((double)totalStations / pageSize);
+
+        // --- Fetch paged data ---
         var options = new FindOptions<WeatherStation>
         {
-            Page = query.Page,
-            Take = query.PageSize,
+            Page = page,
+            Take = pageSize,
             IsAsNoTracking = true,
             IsIgnoreAutoIncludes = false
         };
 
-        // 2. Fetch Data
         var stations = await _repo.FindAsync(predicate, options);
-        return stations;
+        var dtos = stations.Select(x => x.ToDto()).ToList();
+
+        // --- Return paged response ---
+        return new PagedResponse<WeatherStationDto>(
+            dtos,
+            currentPage: page,
+            totalPages: totalPages,
+            totalItems: totalStations
+        );
     }
 }
