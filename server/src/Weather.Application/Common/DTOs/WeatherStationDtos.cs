@@ -50,3 +50,19 @@ public class StationQuery
     }
     private readonly int _pageSize = 100;
 }
+
+public class PagedResponse<T>
+{
+    public IEnumerable<T> Items { get; set; } = Enumerable.Empty<T>();
+    public int CurrentPage { get; set; }
+    public int TotalPages { get; set; }
+    public int TotalItems { get; set; }
+
+    public PagedResponse(IEnumerable<T> items, int currentPage, int totalPages, int totalItems)
+    {
+        Items = items;
+        CurrentPage = currentPage;
+        TotalPages = totalPages;
+        TotalItems = totalItems;
+    }
+}

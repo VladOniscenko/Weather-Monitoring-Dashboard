@@ -23,19 +23,20 @@ public class WeatherStationsController : BaseController
 
     [HttpGet(Name = "GetAllStations")]
     [AllowAnonymous]
-    public async Task<ActionResult<ApiResponse<List<WeatherStationDto>>>> GetAll([FromQuery] StationQuery? query = null)
+    public async Task<ActionResult<ApiResponse<PagedResponse<WeatherStationDto>>>> GetAll([FromQuery] StationQuery? query = null)
     {
-        var stations = await _service.QueryAsync(query);
-        return Ok(ApiResponse<List<WeatherStationDto>>.SuccessResponse(stations));
+        var pagedResult = await _service.QueryPagedAsync(query);
+        return Ok(ApiResponse<PagedResponse<WeatherStationDto>>.SuccessResponse(pagedResult));
     }
 
     [HttpGet("/cordinates", Name = "GetAllStationsCordinates")]
     [AllowAnonymous]
-    public async Task<ActionResult<ApiResponse<List<StationCordinateDto>>>> GetAllCordinates([FromQuery] StationQuery? query = null)
+    public async Task<ActionResult<ApiResponse<PagedResponse<StationCordinateDto>>>> GetAllCordinates([FromQuery] StationQuery? query = null)
     {
         var stations = await _service.GetStationCordinatesAsync(query);
-        return Ok(ApiResponse<List<StationCordinateDto>>.SuccessResponse(stations));
+        return Ok(ApiResponse<PagedResponse<StationCordinateDto>>.SuccessResponse(stations));
     }
+
 
     [HttpGet("{id}")]
     [AllowAnonymous]
