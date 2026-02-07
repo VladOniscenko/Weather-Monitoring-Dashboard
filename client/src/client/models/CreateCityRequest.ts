@@ -10,3 +10,4 @@ export type CreateCityRequest = {
     population?: number;
     timezone?: string | null;
 };
+

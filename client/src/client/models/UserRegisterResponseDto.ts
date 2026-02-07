@@ -6,3 +6,4 @@ export type UserRegisterResponseDto = {
     name?: string | null;
     email?: string | null;
 };
+

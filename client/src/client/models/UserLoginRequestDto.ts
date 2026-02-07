@@ -6,3 +6,4 @@ export type UserLoginRequestDto = {
     email?: string | null;
     password?: string | null;
 };
+

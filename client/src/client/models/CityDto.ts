@@ -11,3 +11,4 @@ export type CityDto = {
     population?: number;
     timezone?: string | null;
 };
+

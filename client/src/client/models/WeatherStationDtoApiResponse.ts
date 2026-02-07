@@ -9,3 +9,4 @@ export type WeatherStationDtoApiResponse = {
     data?: WeatherStationDto;
     errors?: Array<string> | null;
 };
+

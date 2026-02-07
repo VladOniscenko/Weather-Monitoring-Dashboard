@@ -6,3 +6,4 @@ export type UserUpdateRequestDto = {
     name?: string | null;
     email?: string | null;
 };
+

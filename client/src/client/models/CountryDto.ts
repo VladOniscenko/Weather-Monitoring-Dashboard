@@ -16,3 +16,4 @@ export type CountryDto = {
     independent?: boolean;
     landlocked?: boolean;
 };
+

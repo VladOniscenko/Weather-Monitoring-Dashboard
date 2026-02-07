@@ -7,3 +7,4 @@ export type UpdateCityRequest = {
     population?: number;
     timezone?: string | null;
 };
+

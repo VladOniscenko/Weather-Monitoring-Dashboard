@@ -5,8 +5,10 @@
 export type WeatherStationDto = {
     id?: string;
     cityId?: string;
+    userId?: string | null;
     name?: string | null;
     latitude?: number;
     longitude?: number;
     lastSyncedAt?: string;
 };
+

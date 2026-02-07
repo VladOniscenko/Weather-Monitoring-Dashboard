@@ -8,3 +8,4 @@ export type ObjectApiResponse = {
     data?: any;
     errors?: Array<string> | null;
 };
+

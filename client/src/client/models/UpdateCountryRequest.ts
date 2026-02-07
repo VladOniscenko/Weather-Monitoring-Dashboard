@@ -15,3 +15,4 @@ export type UpdateCountryRequest = {
     independent?: boolean;
     landlocked?: boolean;
 };
+

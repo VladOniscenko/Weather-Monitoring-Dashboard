@@ -8,3 +8,4 @@ export type CreateWeatherStationRequest = {
     longitude?: number;
     cityId?: string;
 };
+

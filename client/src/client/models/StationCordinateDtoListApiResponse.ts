@@ -9,3 +9,4 @@ export type StationCordinateDtoListApiResponse = {
     data?: Array<StationCordinateDto> | null;
     errors?: Array<string> | null;
 };
+

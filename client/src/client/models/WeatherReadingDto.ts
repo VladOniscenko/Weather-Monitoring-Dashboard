@@ -24,3 +24,4 @@ export type WeatherReadingDto = {
     snow?: number | null;
     capturedAt?: string;
 };
+

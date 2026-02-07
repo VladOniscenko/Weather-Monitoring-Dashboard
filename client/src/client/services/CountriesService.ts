@@ -12,13 +12,55 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class CountriesService {
     /**
+     * @param name
+     * @param cca2
+     * @param cca3
+     * @param region
+     * @param subregion
+     * @param capital
+     * @param independent
+     * @param landlocked
+     * @param latitude
+     * @param longitude
+     * @param lookInsideBounds
+     * @param page
+     * @param pageSize
      * @returns CountryDtoListApiResponse OK
      * @throws ApiError
      */
-    public static getAllCountries(): CancelablePromise<CountryDtoListApiResponse> {
+    public static getAllCountries(
+        name?: string,
+        cca2?: string,
+        cca3?: string,
+        region?: string,
+        subregion?: string,
+        capital?: string,
+        independent?: boolean,
+        landlocked?: boolean,
+        latitude?: string,
+        longitude?: string,
+        lookInsideBounds?: boolean,
+        page?: number,
+        pageSize?: number,
+    ): CancelablePromise<CountryDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Countries',
+            query: {
+                'Name': name,
+                'CCA2': cca2,
+                'CCA3': cca3,
+                'Region': region,
+                'Subregion': subregion,
+                'Capital': capital,
+                'Independent': independent,
+                'Landlocked': landlocked,
+                'Latitude': latitude,
+                'Longitude': longitude,
+                'LookInsideBounds': lookInsideBounds,
+                'Page': page,
+                'PageSize': pageSize,
+            },
         });
     }
     /**
@@ -27,7 +69,7 @@ export class CountriesService {
      * @throws ApiError
      */
     public static createCountry(
-        requestBody?: CreateCountryRequest
+        requestBody?: CreateCountryRequest,
     ): CancelablePromise<CountryDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -42,13 +84,13 @@ export class CountriesService {
      * @throws ApiError
      */
     public static getCountryById(
-        id: string
+        id: string,
     ): CancelablePromise<CountryDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Countries/{id}',
             path: {
-                id: id,
+                'id': id,
             },
         });
     }
@@ -60,13 +102,13 @@ export class CountriesService {
      */
     public static updateCountry(
         id: string,
-        requestBody?: UpdateCountryRequest
+        requestBody?: UpdateCountryRequest,
     ): CancelablePromise<CountryDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/Countries/{id}',
             path: {
-                id: id,
+                'id': id,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -78,13 +120,13 @@ export class CountriesService {
      * @throws ApiError
      */
     public static deleteCountry(
-        id: string
+        id: string,
     ): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/Countries/{id}',
             path: {
-                id: id,
+                'id': id,
             },
         });
     }
