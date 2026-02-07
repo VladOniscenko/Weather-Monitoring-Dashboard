@@ -936,6 +936,14 @@
                         }
                     },
                     {
+                        "name": "UserId",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
                         "name": "Page",
                         "in": "query",
                         "schema": {
@@ -1079,6 +1087,14 @@
                         "schema": {
                             "type": "integer",
                             "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "UserId",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
                         }
                     },
                     {
