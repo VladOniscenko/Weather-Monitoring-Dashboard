@@ -42,71 +42,30 @@ public class WeatherStationsController : BaseController
     public async Task<ActionResult<ApiResponse<WeatherStationDto>>> GetById(Guid id)
     {
         var station = await _service.FindOneDtoAsync(x => x.Id == id);
-
         if (station == null)
-        {
             return NotFound(ApiResponse<WeatherStationDto>.FailureResponse("WeatherStation not found"));
-        }
 
         return Ok(ApiResponse<WeatherStationDto>.SuccessResponse(station));
     }
 
     [HttpPost(Name = "CreateStation")]
-    [AllowAnonymous]
-    public async Task<IActionResult> Create([FromBody] CreateWeatherStationRequest request)
+    public async Task<ActionResult<ApiResponse<WeatherStationDto>>> Create([FromBody] CreateWeatherStationRequest request)
     {
-        if (!ModelState.IsValid) return BadRequestResponse("Invalid data", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
+        if (!ModelState.IsValid)
+            throw new Exception(ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToString());
 
-        try
-        {
-            var newWeatherStation = new WeatherStation(
-                request.Name,
-                request.Latitude,
-                request.Longitude,
-                request.CityId
-            );
-
-            await _service.CreateAsync(newWeatherStation);
-
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = newWeatherStation.Id },
-                ApiResponse<WeatherStation>.SuccessResponse(newWeatherStation, "WeatherStation created successfully")
-            );
-        }
-        catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
-        {
-            return Conflict(ApiResponse<object>.FailureResponse("A station with this unique code (CCA2/CCA3) already exists."));
-        }
+        var stationId = await _service.CreateAsync(request);
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = stationId }
+        );
     }
 
     [HttpPut("{id}", Name = "UpdateStation")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWeatherStationRequest request)
     {
-        var station = await _service.FindOneAsync(x => x.Id == id);
-        if (station == null)
-            return NotFoundResponse("WeatherStation not found");
-
-        try
-        {
-            station.UpdateDetails(
-                request.Name,
-                request.Latitude,
-                request.Longitude,
-                request.CityId
-            );
-
-            await _service.UpdateAsync(station);
-            return OkResponse(station, "WeatherStation updated successfully");
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequestResponse(ex.Message);
-        }
-        catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
-        {
-            return Conflict(ApiResponse<object>.FailureResponse("Update failed: CCA2 or CCA3 code is already in use by another station."));
-        }
+        await _service.UpdateAsync(id, request);
+        return Ok();
     }
 
     [HttpDelete("{id}", Name = "DeleteStation")]

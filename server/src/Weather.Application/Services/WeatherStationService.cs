@@ -8,10 +8,12 @@ namespace Weather.Application.Services;
 public class WeatherStationService : GenericService<WeatherStation>, IWeatherStationService
 {
     private readonly IWeatherStationRepository _stationRepo;
+    private readonly ICurrentUserService _currentUser;
 
-    public WeatherStationService(IWeatherStationRepository repo) : base(repo)
+    public WeatherStationService(IWeatherStationRepository repo, ICurrentUserService currentUser) : base(repo)
     {
         _stationRepo = repo;
+        _currentUser = currentUser;
     }
 
     public async Task<List<WeatherStationDto>> QueryAsync(StationQuery? query = null)
@@ -37,6 +39,38 @@ public class WeatherStationService : GenericService<WeatherStation>, IWeatherSta
     {
         var result = await base.FindOneAsync(predicate);
         return result?.ToDto();
+    }
+
+    public async Task<Guid> CreateAsync(CreateWeatherStationRequest request)
+    {
+        var newWeatherStation = new WeatherStation(
+            request.Name,
+            request.Latitude,
+            request.Longitude,
+            request.CityId,
+            _currentUser.Id
+        );
+
+        await _stationRepo.AddAsync(newWeatherStation);
+        return newWeatherStation.Id;
+    }
+
+    public async Task<bool> UpdateAsync(Guid id, UpdateWeatherStationRequest request)
+    {
+        var station = await FindOneAsync(x => x.Id == id) ?? throw new KeyNotFoundException("WeatherStation not found");
+
+        if (station.UserId != _currentUser.Id)
+            throw new UnauthorizedAccessException("Not allowed");
+
+        station.UpdateDetails(
+            request.Name,
+            request.Latitude,
+            request.Longitude,
+            request.CityId
+        );
+
+        await _stationRepo.UpdateAsync(station);
+        return true;
     }
 
     private async Task<List<WeatherStation>> GetStationsAsync(StationQuery? query = null)

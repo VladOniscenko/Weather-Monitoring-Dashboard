@@ -9,4 +9,6 @@ public interface IWeatherStationService : IGenericService<WeatherStation>
     public Task<List<WeatherStationDto>> QueryAsync(StationQuery? query = null);
     public Task<List<StationCordinateDto>> GetStationCordinatesAsync(StationQuery? query = null);
     public Task<WeatherStationDto?> FindOneDtoAsync(Expression<Func<WeatherStation, bool>> predicate);
+    public Task<Guid> CreateAsync(CreateWeatherStationRequest request);
+    public Task<bool> UpdateAsync(Guid id, UpdateWeatherStationRequest request);
 }
