@@ -4,7 +4,7 @@ using Weather.API.Controllers;
 using Weather.Application.Common.Interfaces;
 using Weather.Application.Common.DTOs;
 using Weather.Domain.Enums;
-using Weather.Application.Common.Models; 
+using Weather.Application.Common.Models;
 
 namespace Weather.API.Tests.Controllers;
 
@@ -29,22 +29,24 @@ public class UsersControllerTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        var expectedUser = new UserDto(userId, "Oni", "oni@email.com", DateTime.UtcNow, UserRole.User);
+var expectedUser = new UserDto(userId, "Oni", "oni@email.com", DateTime.UtcNow, UserRole.User);
 
         // Tell the mock: "When someone calls GetByIdAsync, return this user"
         _mockUserService.Setup(s => s.GetByIdAsync(userId))
             .ReturnsAsync(expectedUser);
 
         // Act
-        var result = await _controller.GetUser(userId);
+        var actionResult = await _controller.GetUser(userId);
 
         // Assert
-        var okResult = result as OkObjectResult;
-        Assert.IsNotNull(okResult, "Result should be 200 OK");
-        
-        // Unwrap the ApiResponse<T>
-        var response = okResult.Value as ApiResponse<UserDto>;
-        Assert.IsNotNull(response);
+        Assert.IsNotNull(actionResult.Result);
+        Assert.IsInstanceOfType(actionResult.Result, typeof(OkObjectResult));
+
+        var okResult = (OkObjectResult)actionResult.Result;
+        Assert.IsInstanceOfType(okResult.Value, typeof(ApiResponse<UserDto>));
+
+        var response = (ApiResponse<UserDto>)okResult.Value;
+
         Assert.IsTrue(response.Success);
         Assert.AreEqual("Oni", response.Data.Name);
     }
@@ -54,17 +56,16 @@ public class UsersControllerTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        
+
         // Tell the mock: "Return null, as if user doesn't exist"
         _mockUserService.Setup(s => s.GetByIdAsync(userId))
             .ReturnsAsync((UserDto?)null);
 
         // Act
-        var result = await _controller.GetUser(userId);
+        var actionResult = await _controller.GetUser(userId);
 
         // Assert
-        // Inherited from BaseController: NotFoundResponse returns NotFoundObjectResult
-        var notFoundResult = result as NotFoundObjectResult;
-        Assert.IsNotNull(notFoundResult, "Result should be 404 Not Found");
+        Assert.IsNotNull(actionResult.Result);
+        Assert.IsInstanceOfType(actionResult.Result, typeof(NotFoundObjectResult));
     }
 }
