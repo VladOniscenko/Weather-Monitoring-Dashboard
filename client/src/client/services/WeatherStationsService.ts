@@ -3,10 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CreateWeatherStationRequest } from '../models/CreateWeatherStationRequest';
-import type { StationCordinateDtoListApiResponse } from '../models/StationCordinateDtoListApiResponse';
+import type { StationCordinateDtoPagedResponseApiResponse } from '../models/StationCordinateDtoPagedResponseApiResponse';
 import type { UpdateWeatherStationRequest } from '../models/UpdateWeatherStationRequest';
 import type { WeatherStationDtoApiResponse } from '../models/WeatherStationDtoApiResponse';
-import type { WeatherStationDtoListApiResponse } from '../models/WeatherStationDtoListApiResponse';
+import type { WeatherStationDtoPagedResponseApiResponse } from '../models/WeatherStationDtoPagedResponseApiResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -19,9 +19,10 @@ export class WeatherStationsService {
      * @param minLat
      * @param maxLat
      * @param zoom
+     * @param userId
      * @param page
      * @param pageSize
-     * @returns WeatherStationDtoListApiResponse OK
+     * @returns WeatherStationDtoPagedResponseApiResponse OK
      * @throws ApiError
      */
     public static getAllStations(
@@ -32,9 +33,10 @@ export class WeatherStationsService {
         minLat?: number,
         maxLat?: number,
         zoom?: number,
+        userId?: string,
         page?: number,
         pageSize?: number,
-    ): CancelablePromise<WeatherStationDtoListApiResponse> {
+    ): CancelablePromise<WeatherStationDtoPagedResponseApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/WeatherStations',
@@ -46,6 +48,7 @@ export class WeatherStationsService {
                 'MinLat': minLat,
                 'MaxLat': maxLat,
                 'Zoom': zoom,
+                'UserId': userId,
                 'Page': page,
                 'PageSize': pageSize,
             },
@@ -74,9 +77,10 @@ export class WeatherStationsService {
      * @param minLat
      * @param maxLat
      * @param zoom
+     * @param userId
      * @param page
      * @param pageSize
-     * @returns StationCordinateDtoListApiResponse OK
+     * @returns StationCordinateDtoPagedResponseApiResponse OK
      * @throws ApiError
      */
     public static getAllStationsCordinates(
@@ -87,9 +91,10 @@ export class WeatherStationsService {
         minLat?: number,
         maxLat?: number,
         zoom?: number,
+        userId?: string,
         page?: number,
         pageSize?: number,
-    ): CancelablePromise<StationCordinateDtoListApiResponse> {
+    ): CancelablePromise<StationCordinateDtoPagedResponseApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/cordinates',
@@ -101,6 +106,7 @@ export class WeatherStationsService {
                 'MinLat': minLat,
                 'MaxLat': maxLat,
                 'Zoom': zoom,
+                'UserId': userId,
                 'Page': page,
                 'PageSize': pageSize,
             },

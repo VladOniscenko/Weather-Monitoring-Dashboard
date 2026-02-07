@@ -18,7 +18,8 @@ export type { CreateCountryRequest } from './models/CreateCountryRequest';
 export type { CreateWeatherStationRequest } from './models/CreateWeatherStationRequest';
 export type { ObjectApiResponse } from './models/ObjectApiResponse';
 export type { StationCordinateDto } from './models/StationCordinateDto';
-export type { StationCordinateDtoListApiResponse } from './models/StationCordinateDtoListApiResponse';
+export type { StationCordinateDtoPagedResponse } from './models/StationCordinateDtoPagedResponse';
+export type { StationCordinateDtoPagedResponseApiResponse } from './models/StationCordinateDtoPagedResponseApiResponse';
 export type { UpdateCityRequest } from './models/UpdateCityRequest';
 export type { UpdateCountryRequest } from './models/UpdateCountryRequest';
 export type { UpdateWeatherStationRequest } from './models/UpdateWeatherStationRequest';
@@ -37,7 +38,8 @@ export type { WeatherReadingDtoApiResponse } from './models/WeatherReadingDtoApi
 export type { WeatherReadingDtoListApiResponse } from './models/WeatherReadingDtoListApiResponse';
 export type { WeatherStationDto } from './models/WeatherStationDto';
 export type { WeatherStationDtoApiResponse } from './models/WeatherStationDtoApiResponse';
-export type { WeatherStationDtoListApiResponse } from './models/WeatherStationDtoListApiResponse';
+export type { WeatherStationDtoPagedResponse } from './models/WeatherStationDtoPagedResponse';
+export type { WeatherStationDtoPagedResponseApiResponse } from './models/WeatherStationDtoPagedResponseApiResponse';
 
 export { CitiesService } from './services/CitiesService';
 export { CountriesService } from './services/CountriesService';

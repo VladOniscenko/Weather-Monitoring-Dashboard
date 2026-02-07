@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { WeatherStationDto } from './WeatherStationDto';
-export type WeatherStationDtoListApiResponse = {
+import type { WeatherStationDtoPagedResponse } from './WeatherStationDtoPagedResponse';
+export type WeatherStationDtoPagedResponseApiResponse = {
     success?: boolean;
     message?: string | null;
-    data?: Array<WeatherStationDto> | null;
+    data?: WeatherStationDtoPagedResponse;
     errors?: Array<string> | null;
 };
 
