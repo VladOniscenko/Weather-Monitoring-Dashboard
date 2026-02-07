@@ -4,6 +4,7 @@ import { AuthPage } from '@/features/auth/components';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { PublicOnlyRoute } from '@/components/PublicOnlyRoute';
 import { Logout } from '@/features/auth/components/Logout';
+import { Profile } from '@/features/profile/components';
 
 export const AppRouter = () => {
     return (
@@ -24,6 +25,7 @@ export const AppRouter = () => {
             <Route element={<ProtectedRoute />}>
                 <Route path="/map" element={<Map />} />
                 <Route path="/logout" element={<Logout />} />
+                <Route path="/profile" element={<Profile />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
