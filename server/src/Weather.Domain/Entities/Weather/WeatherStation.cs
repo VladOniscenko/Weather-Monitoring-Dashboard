@@ -12,14 +12,14 @@ public class WeatherStation : BaseEntity
     public virtual City? City { get; private set; } // Nullable for EF lazy loading
 
     // user
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; private set; }
     public User? User { get; private set; }
 
     private readonly List<WeatherReading> _readings = new();
     public virtual IReadOnlyCollection<WeatherReading> Readings => _readings.AsReadOnly();
 
     // Constructor
-    public WeatherStation(string name, double latitude, double longitude, Guid cityId, Guid userId)
+    public WeatherStation(string name, double latitude, double longitude, Guid cityId, Guid? userId = null)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Station name required.");
         if (cityId == Guid.Empty) throw new ArgumentException("Station must belong to a city.");

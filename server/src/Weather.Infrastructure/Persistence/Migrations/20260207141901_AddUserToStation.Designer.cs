@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Weather.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Weather.Infrastructure.Persistence;
 namespace Weather.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260207141901_AddUserToStation")]
+    partial class AddUserToStation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -353,7 +356,7 @@ namespace Weather.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -398,8 +401,10 @@ namespace Weather.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Weather.Domain.Entities.User", "User")
-                        .WithMany("Stations")
-                        .HasForeignKey("UserId");
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("City");
 
@@ -409,11 +414,6 @@ namespace Weather.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Weather.Domain.Entities.Country", b =>
                 {
                     b.Navigation("Cities");
-                });
-
-            modelBuilder.Entity("Weather.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Stations");
                 });
 
             modelBuilder.Entity("Weather.Domain.Entities.WeatherStation", b =>

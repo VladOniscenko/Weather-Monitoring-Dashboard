@@ -7,6 +7,11 @@ public class WeatherStationConfiguration : IEntityTypeConfiguration<WeatherStati
 {
     public void Configure(EntityTypeBuilder<WeatherStation> entity)
     {
+        entity.HasOne(ws => ws.User)
+            .WithMany(s => s.Stations)
+            .HasForeignKey(wr => wr.UserId)
+            .IsRequired(false);
+
         entity.Property(e => e.Name)
             .IsRequired()
             .HasMaxLength(255);
@@ -24,7 +29,7 @@ public class WeatherStationConfiguration : IEntityTypeConfiguration<WeatherStati
         entity.HasMany(s => s.Readings)
             .WithOne(wr => wr.Station)
             .HasForeignKey(s => s.StationId);
-        
+
         entity.Property(s => s.LastSyncedAt)
             .HasDefaultValueSql("NOW()");
 

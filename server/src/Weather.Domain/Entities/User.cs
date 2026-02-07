@@ -10,6 +10,9 @@ public class User : BaseEntity
     public bool IsActive { get; private set; }
     public UserRole Role { get; private set; }
 
+    private readonly List<WeatherStation> _stations = new();
+    public virtual IReadOnlyCollection<WeatherStation> Stations => _stations.AsReadOnly();
+
     public User(string name, string email, string passwordHash, UserRole role = UserRole.User)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name is required");
@@ -30,5 +33,5 @@ public class User : BaseEntity
     }
 
     // for EF
-    protected User() { } 
+    protected User() { }
 }
