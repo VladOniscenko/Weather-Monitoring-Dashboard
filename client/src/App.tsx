@@ -9,7 +9,7 @@ const AppContent = () => {
     const { theme } = useAppTheme();
 
     return (
-        <div className="theme-container min-h-screen" data-theme={theme}>
+        <div className="theme-container" data-theme={theme}>
             <BrowserRouter>
                 <Navbar />
                 <AppRouter />
