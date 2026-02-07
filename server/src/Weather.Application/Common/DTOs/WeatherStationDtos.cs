@@ -17,6 +17,7 @@ public record UpdateWeatherStationRequest(
 public record WeatherStationDto(
     Guid Id,
     Guid CityId,
+    Guid UserId,
     string Name,
     double Latitude,
     double Longitude,
