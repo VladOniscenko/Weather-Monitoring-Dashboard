@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CityDtoApiResponse } from '../models/CityDtoApiResponse';
-import type { CityDtoListApiResponse } from '../models/CityDtoListApiResponse';
+import type { CityDtoPagedResponseApiResponse } from '../models/CityDtoPagedResponseApiResponse';
 import type { CreateCityRequest } from '../models/CreateCityRequest';
 import type { ObjectApiResponse } from '../models/ObjectApiResponse';
 import type { UpdateCityRequest } from '../models/UpdateCityRequest';
@@ -19,7 +19,7 @@ export class CitiesService {
      * @param countryId
      * @param page
      * @param pageSize
-     * @returns CityDtoListApiResponse OK
+     * @returns CityDtoPagedResponseApiResponse OK
      * @throws ApiError
      */
     public static getApiCities(
@@ -30,7 +30,7 @@ export class CitiesService {
         countryId?: string,
         page?: number,
         pageSize?: number,
-    ): CancelablePromise<CityDtoListApiResponse> {
+    ): CancelablePromise<CityDtoPagedResponseApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Cities',
