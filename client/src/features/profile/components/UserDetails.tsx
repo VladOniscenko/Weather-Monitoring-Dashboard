@@ -1,14 +1,5 @@
 import { useProfile } from '@/features/profile/hooks/useProfile';
-
-function getInitials(name?: string | null) {
-    if (!name) return '?';
-    return name
-        .split(' ')
-        .map((p) => p[0])
-        .slice(0, 2)
-        .join('')
-        .toUpperCase();
-}
+import {getInitials} from "@/helpers/user";
 
 const UserDetails = () => {
     const { user, isLoading } = useProfile();
@@ -36,7 +27,7 @@ const UserDetails = () => {
                         color: 'var(--accent-fg)',
                     }}
                 >
-                    {getInitials(user.name)}
+                    {getInitials(user.name ?? "")}
                 </div>
 
                 <div>
