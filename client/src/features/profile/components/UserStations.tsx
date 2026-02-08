@@ -3,90 +3,126 @@ import { useWeatherStations } from '@/features/weather/hooks/useWeatherStations'
 
 const UserStations = () => {
     const [page, setPage] = useState<number>(0);
+
     const {
         data: stations,
         loading,
         error,
     } = useWeatherStations({
-        page: page,
+        page,
         pageSize: 16,
     });
 
-    const handlePageChange = (page: number) => {
-        if (page < 0 || (stations?.totalPages && page > stations.totalPages))
-            return;
-        setPage(page);
-    };
+    function handlePageChange(next: number) {
+        if (next < 0) return;
+        if (stations?.totalPages && next >= stations.totalPages) return;
+        setPage(next);
+    }
 
     if (loading) {
-        return <div>Loading stations...</div>;
+        return <div className="card">Loading stations…</div>;
     }
 
     if (error) {
         return (
-            <div className="text-red-600">
-                Error loading stations:{' '}
-                {typeof error === 'string' ? error : 'Unknown error'}
+            <div className="error">
+                <strong>Error loading stations</strong>
+                <div>{typeof error === 'string' ? error : 'Unknown error'}</div>
             </div>
         );
     }
 
     if (!stations?.items || stations.items.length === 0) {
-        return <div>No stations found.</div>;
+        return <div className="card">No stations found.</div>;
     }
 
     return (
-        <div className="user-stations p-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
+        <section className="space-y-6">
+            {/* Station Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {stations.items.map((station) => (
-                    <div
+                    <article
                         key={station.id}
-                        className="border rounded p-3 shadow-sm hover:shadow-md transition"
+                        className="card p-4 flex flex-col justify-between hover:shadow-md transition"
                     >
-                        <h3 className="font-semibold text-lg">
-                            {station.name ?? 'Unnamed Station'}
-                        </h3>
-                        <p>
-                            <strong>Latitude:</strong>{' '}
-                            {station.latitude ?? 'N/A'}
-                        </p>
-                        <p>
-                            <strong>Longitude:</strong>{' '}
-                            {station.longitude ?? 'N/A'}
-                        </p>
-                    </div>
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-2">
+                            <h3 className="font-semibold">
+                                {station.name ?? 'Unnamed Station'}
+                            </h3>
+                            <span
+                                className="inline-block w-3 h-3 rounded-full"
+                                style={{ background: 'var(--accent)' }}
+                                title="Active station"
+                            />
+                        </div>
+
+                        {/* Metadata */}
+                        <div className="grid grid-cols-1 gap-1 text-sm">
+                            <InfoBadge
+                                label="Latitude"
+                                value={station.latitude ?? 'N/A'}
+                            />
+                            <InfoBadge
+                                label="Longitude"
+                                value={station.longitude ?? 'N/A'}
+                            />
+                        </div>
+                    </article>
                 ))}
             </div>
 
-            {/* Pagination Controls */}
-            <div className="pagination flex justify-center items-center gap-2 mt-4">
-                <button
-                    className="px-3 py-1 border rounded disabled:opacity-50"
-                    disabled={page < 1}
-                    onClick={() => handlePageChange(page - 1)}
-                >
-                    Previous
-                </button>
-
-                <span>
+            {/* Pagination */}
+            <div className="card flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="flex gap-2">
+                    <button
+                        disabled={page < 1}
+                        onClick={() => handlePageChange(page - 1)}
+                    >
+                        Previous
+                    </button>
+                    <button
+                        disabled={page >= (stations.totalPages ?? 1) - 1}
+                        onClick={() => handlePageChange(page + 1)}
+                    >
+                        Next
+                    </button>
+                </div>
+                <div>
                     Page {page + 1} of {stations.totalPages ?? 1}
-                </span>
-
-                <button
-                    className="px-3 py-1 border rounded disabled:opacity-50"
-                    disabled={page >= (stations.totalPages ?? 1)}
-                    onClick={() => handlePageChange(page + 1)}
-                >
-                    Next
-                </button>
+                </div>
             </div>
 
-            {/* Total Stations Info */}
-            <div className="text-center text-sm text-gray-500 mt-1">
+            {/* Total Stations */}
+            <div className="text-center text-sm opacity-70">
                 Total Stations: {stations.totalItems ?? stations.items.length}
             </div>
-        </div>
+        </section>
     );
 };
+
+function InfoBadge({
+    label,
+    value,
+}: {
+    label: string;
+    value: React.ReactNode;
+}) {
+    return (
+        <div
+            style={{
+                padding: '0.35rem 0.75rem',
+                borderRadius: 'var(--radius-base)',
+                background:
+                    'color-mix(in srgb, var(--bg-surface) 70%, transparent)',
+                border: '1px solid var(--border)',
+                display: 'inline-block',
+            }}
+        >
+            <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>{label}</div>
+            <div style={{ fontWeight: 600 }}>{value}</div>
+        </div>
+    );
+}
 
 export default UserStations;
