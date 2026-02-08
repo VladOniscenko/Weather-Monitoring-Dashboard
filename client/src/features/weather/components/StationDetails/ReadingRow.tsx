@@ -6,7 +6,7 @@ import { formatDate, formatTime } from '@/helpers/date';
 interface ReadingRowProps {
     reading: WeatherReadingDto;
     isSelected: boolean;
-    onSelect: (id: string | undefined) => void;
+    onSelect: (id: string | null) => void;
 }
 
 export default function ReadingRow({
@@ -22,7 +22,7 @@ export default function ReadingRow({
             className={`${styles.readingRow} ${
                 isSelected ? styles.selectedRow : ''
             }`}
-            onClick={() => onSelect(reading.id)}
+            onClick={() => onSelect(reading.id ?? null)}
         >
             <div className="flex flex-col">
                 <span className="text-[10px] font-bold text-txt-muted">

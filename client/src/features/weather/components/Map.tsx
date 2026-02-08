@@ -1,30 +1,23 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { type WeatherStationDto } from '@/client';
 
 import MapView from './MapView';
-import StatioDetails from './StationDetails';
+import StationDetails from './StationDetails';
 
-const Map: React.FC = () => {
-    const [open, setOpen] = useState<boolean>(false);
-    const [stationId, setStationId] = useState<string>();
+export default function Map() {
+    const [stationId, setStationId] = useState<string | null>(null);
 
     const handleStationSelection = (station: WeatherStationDto) => {
-        setStationId(station.id);
-        setOpen(true);
+        setStationId(station.id ?? null);
     };
 
     return (
         <>
             <MapView setStation={handleStationSelection} />
-            {stationId && (
-                <StatioDetails
-                    isOpen={open}
-                    stationId={stationId}
-                    close={() => setOpen(false)}
-                />
-            )}
+            <StationDetails
+                stationId={stationId}
+                close={() => setStationId(null)}
+            />
         </>
     );
-};
-
-export default Map;
+}
