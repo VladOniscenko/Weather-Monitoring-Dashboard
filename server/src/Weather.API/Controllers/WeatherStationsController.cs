@@ -10,7 +10,7 @@ using Npgsql;
 namespace Weather.API.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Admin")]
+[Authorize]
 [Route("api/[controller]")]
 public class WeatherStationsController : BaseController
 {
@@ -55,10 +55,11 @@ public class WeatherStationsController : BaseController
         if (!ModelState.IsValid)
             throw new Exception(ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToString());
 
-        var stationId = await _service.CreateAsync(request);
+        var station = await _service.CreateAsync(request);
         return CreatedAtAction(
             nameof(GetById),
-            new { id = stationId }
+            new { id = station.Id },
+            station
         );
     }
 

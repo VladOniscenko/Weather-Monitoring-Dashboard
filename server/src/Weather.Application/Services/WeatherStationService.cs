@@ -47,7 +47,7 @@ public class WeatherStationService : GenericService<WeatherStation>, IWeatherSta
         return result?.ToDto();
     }
 
-    public async Task<Guid> CreateAsync(CreateWeatherStationRequest request)
+    public async Task<WeatherStation> CreateAsync(CreateWeatherStationRequest request)
     {
         var newWeatherStation = new WeatherStation(
             request.Name,
@@ -58,7 +58,7 @@ public class WeatherStationService : GenericService<WeatherStation>, IWeatherSta
         );
 
         await _stationRepo.AddAsync(newWeatherStation);
-        return newWeatherStation.Id;
+        return newWeatherStation;
     }
 
     public async Task<bool> UpdateAsync(Guid id, UpdateWeatherStationRequest request)
