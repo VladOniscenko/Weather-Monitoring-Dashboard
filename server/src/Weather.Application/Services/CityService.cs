@@ -11,7 +11,7 @@ public class CityService : GenericService<City>, ICityService
 {
     public CityService(IGenericRepository<City> repo) : base(repo) { }
 
-    public async Task<List<CityDto>> QueryAsync(CityQuery? query = null)
+    public async Task<PagedResponse<CityDto>> QueryPagedAsync(CityQuery? query = null)
     {
         query ??= new CityQuery();
 
@@ -50,11 +50,21 @@ public class CityService : GenericService<City>, ICityService
                 predicate = Combine(predicate, c => c.Longitude == lng);
         }
 
+        var totalStations = await _repo.CountAsync(predicate);
+        var totalPages = (int)Math.Ceiling((double)totalStations / query.PageSize);
+
         var all = await _repo.FindAsync(predicate);
 
         // Pagination
         int skip = query.Page * query.PageSize;
-        return all.Skip(skip).Take(query.PageSize).Select(c => c.ToDto()).ToList();
+        var res = all.Skip(skip).Take(query.PageSize).Select(c => c.ToDto()).ToList();
+        
+        return new PagedResponse<CityDto>(
+            res,
+            currentPage: query.Page,
+            totalPages: totalPages,
+            totalItems: totalStations
+        );
     }
 
     public async Task<CityDto?> FindOneDtoAsync(Expression<Func<City, bool>> predicate)

@@ -25,10 +25,10 @@ public class CitiesController : BaseController
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<ActionResult<ApiResponse<List<CityDto>>>> GetAll([FromQuery] CityQuery? query = null)
+    public async Task<ActionResult<ApiResponse<PagedResponse<CityDto>>>> GetAll([FromQuery] CityQuery? query = null)
     {
-        var cities = await _service.QueryAsync(query);
-        return Ok(ApiResponse<List<CityDto>>.SuccessResponse(cities));
+        var cities = await _service.QueryPagedAsync(query);
+        return Ok(ApiResponse<PagedResponse<CityDto>>.SuccessResponse(cities));
     }
 
     [HttpGet("{id}")]
