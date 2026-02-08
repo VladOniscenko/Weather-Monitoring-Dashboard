@@ -22,12 +22,12 @@ export const useRegister = () => {
             validatePassword(password),
         ];
 
-        const firstError = validations.find(Boolean);
-        if (firstError) {
-            throw new Error(firstError as string);
-        }
-
         try {
+            const firstError = validations.find(Boolean);
+            if (firstError) {
+                throw new Error(firstError as string);
+            }
+
             const response = await UsersService.registerUser({
                 name,
                 email,
