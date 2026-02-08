@@ -20,8 +20,24 @@ public class UsersController : BaseController
     [AllowAnonymous]
     public async Task<ActionResult<ApiResponse<UserRegisterResponseDto>>> Register([FromBody] UserRegisterRequestDto request)
     {
-        var result = await _userService.RegisterAsync(request);
-        return Ok(ApiResponse<UserRegisterResponseDto>.SuccessResponse(result, "Registration successful"));
+        try
+        {
+            var result = await _userService.RegisterAsync(request);
+
+            if (result == null)
+                return Conflict(ApiResponse<UserRegisterResponseDto>.FailureResponse("User with this email already exists."));
+
+            return Ok(ApiResponse<UserRegisterResponseDto>.SuccessResponse(result, "Registration successful"));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ApiResponse<UserRegisterResponseDto>.FailureResponse(ex.Message));
+        }
+        catch (Exception ex)
+        {
+            // Let GlobalExceptionMiddleware handle unexpected errors
+            throw;
+        }
     }
 
     [HttpPost("login", Name = "LoginUser")]

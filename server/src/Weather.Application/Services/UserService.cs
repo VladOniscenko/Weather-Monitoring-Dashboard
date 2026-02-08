@@ -28,9 +28,11 @@ public class UserService : IUserService
         if (!EmailValidator.IsValidEmail(request.Email))
             throw new ArgumentException("Invalid email.");
 
-        // check if email not taken
-        var exists = await _context.AnyAsync(u => u.Email == request.Email);
-        if (exists) throw new Exception("User already exists.");
+        // Check if email is already taken
+        var exists = await _context.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower());
+
+        if (exists)
+            return null; // return null to indicate the user already exists
 
         // create user
         var user = new User(
@@ -41,10 +43,7 @@ public class UserService : IUserService
 
         // save user
         await _context.AddAsync(user);
-        return new UserRegisterResponseDto(
-            user.Name,
-            user.Email
-        );
+        return new UserRegisterResponseDto(user.Name, user.Email);
     }
 
 
@@ -74,7 +73,7 @@ public class UserService : IUserService
 
             finalEmail = request.Email;
         }
-        
+
         user.UpdateDetails(finalName, finalEmail);
 
         // save it
