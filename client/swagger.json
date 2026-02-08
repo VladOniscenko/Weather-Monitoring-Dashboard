@@ -68,17 +68,17 @@
                         "content": {
                             "text/plain": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/CityDtoListApiResponse"
+                                    "$ref": "#/components/schemas/CityDtoPagedResponseApiResponse"
                                 }
                             },
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/CityDtoListApiResponse"
+                                    "$ref": "#/components/schemas/CityDtoPagedResponseApiResponse"
                                 }
                             },
                             "text/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/CityDtoListApiResponse"
+                                    "$ref": "#/components/schemas/CityDtoPagedResponseApiResponse"
                                 }
                             }
                         }
@@ -1295,7 +1295,32 @@
                 },
                 "additionalProperties": false
             },
-            "CityDtoListApiResponse": {
+            "CityDtoPagedResponse": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CityDto"
+                        },
+                        "nullable": true
+                    },
+                    "currentPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalItems": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "CityDtoPagedResponseApiResponse": {
                 "type": "object",
                 "properties": {
                     "success": {
@@ -1306,11 +1331,7 @@
                         "nullable": true
                     },
                     "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/CityDto"
-                        },
-                        "nullable": true
+                        "$ref": "#/components/schemas/CityDtoPagedResponse"
                     },
                     "errors": {
                         "type": "array",

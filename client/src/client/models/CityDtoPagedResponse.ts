@@ -3,10 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CityDto } from './CityDto';
-export type CityDtoListApiResponse = {
-    success?: boolean;
-    message?: string | null;
-    data?: Array<CityDto> | null;
-    errors?: Array<string> | null;
+export type CityDtoPagedResponse = {
+    items?: Array<CityDto> | null;
+    currentPage?: number;
+    totalPages?: number;
+    totalItems?: number;
 };
 
