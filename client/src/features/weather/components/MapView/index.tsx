@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useMemo, useEffect, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { Loader2 } from 'lucide-react';
@@ -22,35 +22,39 @@ const WORLD_BOUNDS: L.LatLngBoundsExpression = [
 const DEFAULT_CENTER: L.LatLngExpression = [51.9244, 4.4777]; // Rotterdam
 
 // Memoized Marker Component to prevent re-attaching listeners
-const StationMarker = React.memo(({ 
-    station, 
-    icon, 
-    onSelect 
-}: { 
-    station: WeatherStationDto, 
-    icon: L.DivIcon, 
-    onSelect: (s: WeatherStationDto) => void 
-}) => {
-    // Memoize handlers to maintain referential equality
-    const handlers = useMemo(() => ({
-        click: () => onSelect(station),
-    }), [station, onSelect]);
+const StationMarker = React.memo(
+    ({
+        station,
+        icon,
+        onSelect,
+    }: {
+        station: WeatherStationDto;
+        icon: L.DivIcon;
+        onSelect: (s: WeatherStationDto) => void;
+    }) => {
+        const handlers = useMemo(
+            () => ({
+                click: () => onSelect(station),
+            }),
+            [station, onSelect]
+        );
 
-    return (
-        <Marker
-            position={[station.latitude!, station.longitude!]}
-            icon={icon}
-            eventHandlers={handlers}
-        />
-    );
-});
+        return (
+            <Marker
+                position={[station.latitude!, station.longitude!]}
+                icon={icon}
+                eventHandlers={handlers}
+            />
+        );
+    }
+);
 StationMarker.displayName = 'StationMarker';
 
 // Component to handle map movements
-const MapController = ({ 
-    onBoundsChange 
-}: { 
-    onBoundsChange: (zoom: number, bounds: L.LatLngBounds) => void 
+const MapController = ({
+    onBoundsChange,
+}: {
+    onBoundsChange: (zoom: number, bounds: L.LatLngBounds) => void;
 }) => {
     const map = useMap();
 
@@ -61,7 +65,7 @@ const MapController = ({
             onBoundsChange(map.getZoom(), map.getBounds());
         };
 
-        // Attach listeners manually for finer control if needed, 
+        // Attach listeners manually for finer control if needed,
         // or use useMapEvents. Debouncing logic happens in the parent.
         map.on('moveend', handleMapChange);
         map.on('zoomend', handleMapChange);
@@ -119,31 +123,58 @@ interface MapViewProps {
 const MapView: React.FC<MapViewProps> = ({ setStation }: MapViewProps) => {
     const { position } = useGeoLocation();
     const { theme } = useAppTheme();
-    
+
     // Memoize icons once
     const markerIcon = useMemo(() => createCustomIcon(false), []);
     const currentLocationMarkerIcon = useMemo(() => createCustomIcon(true), []);
 
-    const [mapState, setMapState] = useState({
+    const [mapState, setMapState] = useState<{
+        zoom: number;
+        bounds: L.LatLngBounds | null;
+    }>({
         zoom: 13,
-        bounds: null as L.LatLngBounds | null,
+        bounds: null,
     });
 
-    // Debounce the map update to prevent API spamming
-    const handleBoundsChange = useCallback((zoom: number, bounds: L.LatLngBounds) => {
-        const timer = setTimeout(() => {
-            setMapState({ zoom, bounds });
-        }, 300);
-        return () => clearTimeout(timer);
-    }, []);
+    // REAL debounce (persistent timer)
+    const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-    const { data: stations, loading } = useWeatherStationsCoordinates({
-        minLng: mapState.bounds?.getSouthWest().lng,
-        maxLng: mapState.bounds?.getNorthEast().lng,
-        minLat: mapState.bounds?.getSouthWest().lat,
-        maxLat: mapState.bounds?.getNorthEast().lat,
-        pageSize: 1000
-    });
+    const handleBoundsChange = useCallback(
+        (zoom: number, bounds: L.LatLngBounds) => {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+
+            debounceRef.current = setTimeout(() => {
+                setMapState((prev) => {
+                    if (!prev.bounds) return { zoom, bounds };
+
+                    const sameZoom = prev.zoom === zoom;
+                    const sameBounds = prev.bounds.equals(bounds);
+
+                    if (sameZoom && sameBounds) return prev;
+                    return { zoom, bounds };
+                });
+            }, 300);
+        },
+        []
+    );
+
+    // Stable query params → prevents refetch storms
+    const queryParams = useMemo(() => {
+        if (!mapState.bounds) return undefined;
+
+        return {
+            minLng: mapState.bounds.getSouthWest().lng,
+            maxLng: mapState.bounds.getNorthEast().lng,
+            minLat: mapState.bounds.getSouthWest().lat,
+            maxLat: mapState.bounds.getNorthEast().lat,
+            pageSize: 1000,
+        };
+    }, [mapState]);
+
+    const { data: stations, loading } =
+        useWeatherStationsCoordinates(queryParams);
 
     const tileUrl = useMemo(() => {
         const variant = ['light', 'latte'].includes(theme) ? 'light' : 'dark';
@@ -156,7 +187,9 @@ const MapView: React.FC<MapViewProps> = ({ setStation }: MapViewProps) => {
             {loading && (
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-2 px-4 py-2 bg-slate-900/90 text-white rounded-full shadow-lg backdrop-blur-md transition-all">
                     <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
-                    <span className="text-xs font-medium">Updating area...</span>
+                    <span className="text-xs font-medium">
+                        Updating area...
+                    </span>
                 </div>
             )}
 
@@ -181,7 +214,7 @@ const MapView: React.FC<MapViewProps> = ({ setStation }: MapViewProps) => {
                 {position && (
                     <Marker
                         key="user-loc"
-                        position={[position.lat!, position.lng!]}
+                        position={[position.lat, position.lng]}
                         icon={currentLocationMarkerIcon}
                         zIndexOffset={1000}
                     />
@@ -197,7 +230,7 @@ const MapView: React.FC<MapViewProps> = ({ setStation }: MapViewProps) => {
                     animate={true}
                 >
                     {stations?.items?.map((station) => (
-                        <StationMarker 
+                        <StationMarker
                             key={station.id}
                             station={station}
                             icon={markerIcon}
