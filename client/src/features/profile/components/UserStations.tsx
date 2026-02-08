@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { useWeatherStations } from '@/features/weather/hooks/useWeatherStations';
+import { useAuth } from '@/hooks/useAuth';
 
 const UserStations = () => {
     const [page, setPage] = useState<number>(0);
-
+    const { user } = useAuth();
     const {
         data: stations,
         loading,
         error,
     } = useWeatherStations({
-        page,
+        userId: user?.id,
+        page: page,
         pageSize: 16,
     });
 
