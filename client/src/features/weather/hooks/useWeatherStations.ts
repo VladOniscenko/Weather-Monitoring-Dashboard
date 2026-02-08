@@ -6,16 +6,17 @@ import {
 } from '@/client';
 
 interface UseWeatherStationsParams {
-    cityId?: string;
-    name?: string;
-    minLng?: number;
-    maxLng?: number;
-    minLat?: number;
-    maxLat?: number;
-    zoom?: number;
-    page?: number;
-    pageSize?: number;
-    userId?: string
+    cityId?: string,
+    name?: string,
+    minLng?: number,
+    maxLng?: number,
+    minLat?: number,
+    maxLat?: number,
+    zoom?: number,
+    page?: number,
+    pageSize?: number,
+    userId?: string,
+    refreshKey?: number,
 }
 
 export function useWeatherStations(params?: UseWeatherStationsParams) {
@@ -59,7 +60,7 @@ export function useWeatherStations(params?: UseWeatherStationsParams) {
         return () => {
             cancelled = true;
         };
-    }, [JSON.stringify(params)]);
+    }, [params]);
 
     return { data, loading, error };
 }
@@ -102,7 +103,7 @@ export function useWeatherStationsCoordinates(
         return () => {
             cancelled = true;
         };
-    }, [JSON.stringify(params)]);
+    }, [params]);
 
     return { data, loading };
 }
