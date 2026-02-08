@@ -39,7 +39,7 @@ export const useLogin = () => {
             navigate('/map');
         } catch (err: any) {
             setError(
-                err?.body?.message ||
+                err?.body?.Message ||
                     err?.message ||
                     'Invalid email or password'
             );
