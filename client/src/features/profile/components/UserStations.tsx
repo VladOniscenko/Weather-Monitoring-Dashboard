@@ -62,14 +62,14 @@ const UserStations = () => {
             <div className="pagination flex justify-center items-center gap-2 mt-4">
                 <button
                     className="px-3 py-1 border rounded disabled:opacity-50"
-                    disabled={page <= 1}
+                    disabled={page < 1}
                     onClick={() => handlePageChange(page - 1)}
                 >
                     Previous
                 </button>
 
                 <span>
-                    Page {page} of {stations.totalPages ?? 1}
+                    Page {page + 1} of {stations.totalPages ?? 1}
                 </span>
 
                 <button
