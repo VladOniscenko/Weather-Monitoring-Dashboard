@@ -9,7 +9,8 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { CityDto } from './models/CityDto';
 export type { CityDtoApiResponse } from './models/CityDtoApiResponse';
-export type { CityDtoListApiResponse } from './models/CityDtoListApiResponse';
+export type { CityDtoPagedResponse } from './models/CityDtoPagedResponse';
+export type { CityDtoPagedResponseApiResponse } from './models/CityDtoPagedResponseApiResponse';
 export type { CountryDto } from './models/CountryDto';
 export type { CountryDtoApiResponse } from './models/CountryDtoApiResponse';
 export type { CountryDtoListApiResponse } from './models/CountryDtoListApiResponse';
