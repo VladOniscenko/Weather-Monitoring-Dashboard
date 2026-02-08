@@ -1,19 +1,23 @@
 import { useState } from 'react';
 import { useWeatherStations } from '@/features/weather/hooks/useWeatherStations';
 import { useAuth } from '@/hooks/useAuth';
+import { useMemo } from 'react';
 
-const UserStations = () => {
+const UserStations = ({ refreshKey }: { refreshKey: number }) => {
     const [page, setPage] = useState<number>(0);
     const { user } = useAuth();
-    const {
-        data: stations,
-        loading,
-        error,
-    } = useWeatherStations({
-        userId: user?.id,
-        page: page,
-        pageSize: 16,
-    });
+
+    const params = useMemo(
+        () => ({
+            userId: user?.id,
+            page,
+            pageSize: 16,
+            refreshKey,
+        }),
+        [user?.id, page, refreshKey]
+    );
+
+    const { data: stations, loading, error } = useWeatherStations(params);
 
     function handlePageChange(next: number) {
         if (next < 0) return;
@@ -40,6 +44,32 @@ const UserStations = () => {
 
     return (
         <section className="space-y-6">
+            {/* Pagination */}
+            <div className="card flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="flex gap-2">
+                    <button
+                        disabled={page < 1}
+                        onClick={() => handlePageChange(page - 1)}
+                    >
+                        Previous
+                    </button>
+                    <button
+                        disabled={page >= (stations.totalPages ?? 1) - 1}
+                        onClick={() => handlePageChange(page + 1)}
+                    >
+                        Next
+                    </button>
+                </div>
+                <div>
+                    Page {page + 1} of {stations.totalPages ?? 1}
+                </div>
+            </div>
+
+            {/* Total Stations */}
+            <div className="text-center text-sm opacity-70">
+                Total Stations: {stations.totalItems ?? stations.items.length}
+            </div>
+
             {/* Station Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {stations.items.map((station) => (
@@ -72,32 +102,6 @@ const UserStations = () => {
                         </div>
                     </article>
                 ))}
-            </div>
-
-            {/* Pagination */}
-            <div className="card flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div className="flex gap-2">
-                    <button
-                        disabled={page < 1}
-                        onClick={() => handlePageChange(page - 1)}
-                    >
-                        Previous
-                    </button>
-                    <button
-                        disabled={page >= (stations.totalPages ?? 1) - 1}
-                        onClick={() => handlePageChange(page + 1)}
-                    >
-                        Next
-                    </button>
-                </div>
-                <div>
-                    Page {page + 1} of {stations.totalPages ?? 1}
-                </div>
-            </div>
-
-            {/* Total Stations */}
-            <div className="text-center text-sm opacity-70">
-                Total Stations: {stations.totalItems ?? stations.items.length}
             </div>
         </section>
     );
