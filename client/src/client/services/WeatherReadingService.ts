@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CreateWeatherReadingRequest } from '../models/CreateWeatherReadingRequest';
 import type { WeatherReadingDtoApiResponse } from '../models/WeatherReadingDtoApiResponse';
 import type { WeatherReadingDtoListApiResponse } from '../models/WeatherReadingDtoListApiResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -37,6 +38,21 @@ export class WeatherReadingService {
         });
     }
     /**
+     * @param requestBody
+     * @returns WeatherReadingDtoApiResponse OK
+     * @throws ApiError
+     */
+    public static createReading(
+        requestBody?: CreateWeatherReadingRequest,
+    ): CancelablePromise<WeatherReadingDtoApiResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/WeatherReading',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
      * @param id
      * @returns WeatherReadingDtoApiResponse OK
      * @throws ApiError
@@ -46,6 +62,22 @@ export class WeatherReadingService {
     ): CancelablePromise<WeatherReadingDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
+            url: '/api/WeatherReading/{id}',
+            path: {
+                'id': id,
+            },
+        });
+    }
+    /**
+     * @param id
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static deleteReading(
+        id: string,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
             url: '/api/WeatherReading/{id}',
             path: {
                 'id': id,
