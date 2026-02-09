@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
 import { useAppTheme } from '@/context/ThemeContext';
-import { Settings } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/features/profile/hooks/useProfile';
 import styles from './navbar.module.css';
@@ -36,7 +36,7 @@ export const Navbar: React.FC = () => {
         <>
             {/* Floating Settings Button */}
             <div className={styles.navbarWrapper}>
-                <Settings
+                <Menu
                     onClick={() => setOpen(true)}
                     className={styles.settingsBtn}
                 />
@@ -88,7 +88,6 @@ export const Navbar: React.FC = () => {
                         <div className={styles.navList}>
                             {isAuthenticated ? (
                                 <>
-                                    <NavItem placeholder="Home" url="/home" />
                                     <NavItem placeholder="Map" url="/map" />
                                     <NavItem
                                         placeholder="Profile"
@@ -100,10 +99,13 @@ export const Navbar: React.FC = () => {
                                     />
                                 </>
                             ) : (
-                                <NavItem
-                                    placeholder="Login / Sign-Up"
-                                    url="/login"
-                                />
+                                <>
+                                    <NavItem placeholder="Home" url="/home" />
+                                    <NavItem
+                                        placeholder="Login / Sign-Up"
+                                        url="/login"
+                                    />
+                                </>
                             )}
                         </div>
 
