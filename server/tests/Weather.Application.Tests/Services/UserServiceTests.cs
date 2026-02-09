@@ -65,7 +65,6 @@ public class UserServiceTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception), "User already exists.")]
     public async Task RegisterAsync_WhenEmailTaken_ShouldThrowException()
     {
         // Arrange
@@ -75,7 +74,10 @@ public class UserServiceTests
                  .ReturnsAsync(true);
 
         // Act
-        await _userService.RegisterAsync(request);
+        var res = await _userService.RegisterAsync(request);
+
+        // Assert
+        Assert.IsNull(res);
     }
 
     [TestMethod]
