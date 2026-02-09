@@ -11,8 +11,8 @@ export const Profile = () => {
     return (
         <div className="p-4">
             <UserDetails />
-            <StationCreateForm onCreated={handleStationCreated} />
-            <UserStations refreshKey={refreshKey} />
+            <StationCreateForm refreshStations={handleStationCreated} />
+            <UserStations refreshKey={refreshKey} refreshStations={handleStationCreated}/>
         </div>
     );
 };
