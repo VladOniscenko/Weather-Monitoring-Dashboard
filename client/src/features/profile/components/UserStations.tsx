@@ -2,8 +2,16 @@ import { useState } from 'react';
 import { useWeatherStations } from '@/features/weather/hooks/useWeatherStations';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemo } from 'react';
+import { toast } from 'react-toastify';
+import { WeatherStationsService } from '@/client';
 
-const UserStations = ({ refreshKey }: { refreshKey: number }) => {
+const UserStations = ({
+    refreshKey,
+    refreshStations,
+}: {
+    refreshKey: number;
+    refreshStations: () => void;
+}) => {
     const [page, setPage] = useState<number>(0);
     const { user } = useAuth();
 
@@ -40,6 +48,19 @@ const UserStations = ({ refreshKey }: { refreshKey: number }) => {
 
     if (!stations?.items || stations.items.length === 0) {
         return <div className="card">No stations found.</div>;
+    }
+
+    async function handleDelete(id: string) {
+        try {
+            await WeatherStationsService.deleteStation(id);
+
+            toast.success('Station deleted');
+            refreshStations();
+        } catch (err) {
+            const message =
+                err instanceof Error ? err.message : 'Failed to delete station';
+            toast.error(message);
+        }
     }
 
     return (
@@ -82,11 +103,25 @@ const UserStations = ({ refreshKey }: { refreshKey: number }) => {
                             <h3 className="font-semibold">
                                 {station.name ?? 'Unnamed Station'}
                             </h3>
-                            <span
-                                className="inline-block w-3 h-3 rounded-full"
-                                style={{ background: 'var(--accent)' }}
-                                title="Active station"
-                            />
+
+                            {station.id && (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if(!station.id) return;
+
+                                        const ok = window.confirm(
+                                            `Delete "${station.name ?? 'this station'}"?`
+                                        );
+                                        if (!ok) return;
+
+                                        handleDelete(station.id);
+                                    }}
+                                    className="error"
+                                >
+                                    Delete
+                                </button>
+                            )}
                         </div>
 
                         {/* Metadata */}

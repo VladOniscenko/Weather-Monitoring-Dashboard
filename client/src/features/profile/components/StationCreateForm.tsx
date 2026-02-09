@@ -8,10 +8,18 @@ import {
     DialogTitle,
 } from '@headlessui/react';
 import { useCities } from '@/features/gelocation/hooks/useCities';
-import { type CreateWeatherStationRequest, WeatherStationsService } from '@/client';
+import {
+    type CreateWeatherStationRequest,
+    WeatherStationsService,
+} from '@/client';
+import { toast } from 'react-toastify';
 
-export default function StationCreateForm({ onCreated }: { onCreated: () => void }) {
-    const [open, setOpen] = useState(false);
+export default function StationCreateForm({
+    refreshStations,
+}: {
+    refreshStations: () => void;
+}) {
+    const [open, setOpen] = useState<boolean>(false);
     const [form, setForm] = useState<CreateWeatherStationRequest>({
         name: '',
         latitude: undefined,
@@ -31,10 +39,21 @@ export default function StationCreateForm({ onCreated }: { onCreated: () => void
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        WeatherStationsService.createStation(form);
-        setOpen(false);
-        
-        setTimeout(onCreated, 1000);
+        try {
+            const response = await WeatherStationsService.createStation(form);
+            if (!response.success) {
+                throw new Error(response.message || "Could't create station");
+            }
+            toast.success('Saved successfully!');
+            setTimeout(refreshStations, 1000);
+        } catch (err) {
+            const message =
+                err instanceof Error ? err.message : 'Something went wrong!';
+
+            toast.error(message);
+        } finally {
+            setOpen(false);
+        }
     }
 
     return (
@@ -61,6 +80,7 @@ export default function StationCreateForm({ onCreated }: { onCreated: () => void
                             <div>
                                 <label>Station name</label>
                                 <input
+                                    required
                                     value={form.name ?? ''}
                                     onChange={(e) =>
                                         update('name', e.target.value)
@@ -74,6 +94,7 @@ export default function StationCreateForm({ onCreated }: { onCreated: () => void
                                 <div>
                                     <label>Latitude</label>
                                     <input
+                                        required
                                         type="number"
                                         step="any"
                                         value={form.latitude ?? ''}
@@ -89,6 +110,7 @@ export default function StationCreateForm({ onCreated }: { onCreated: () => void
                                 <div>
                                     <label>Longitude</label>
                                     <input
+                                        required
                                         type="number"
                                         step="any"
                                         value={form.longitude ?? ''}
@@ -117,6 +139,7 @@ export default function StationCreateForm({ onCreated }: { onCreated: () => void
                             <div>
                                 <label>City</label>
                                 <select
+                                    required
                                     value={form.cityId ?? ''}
                                     onChange={(e) =>
                                         update('cityId', e.target.value)
