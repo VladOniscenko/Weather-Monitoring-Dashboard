@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { WeatherStationsService } from '@/client';
+import StationReadingForm from './ReadingCreateForm';
 
 const UserStations = ({
     refreshKey,
@@ -13,6 +14,8 @@ const UserStations = ({
     refreshStations: () => void;
 }) => {
     const [page, setPage] = useState<number>(0);
+    const [openStationId, setOpenStationId] = useState<string | null>(null);
+
     const { user } = useAuth();
 
     const params = useMemo(
@@ -96,7 +99,10 @@ const UserStations = ({
                 {stations.items.map((station) => (
                     <article
                         key={station.id}
-                        className="card p-4 flex flex-col justify-between hover:shadow-md transition"
+                        onClick={() =>
+                            station.id && setOpenStationId(station.id)
+                        }
+                        className="card p-4 flex flex-col justify-between hover:shadow-md transition cursor-pointer"
                     >
                         {/* Header */}
                         <div className="flex items-center justify-between mb-2">
@@ -108,8 +114,7 @@ const UserStations = ({
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        if(!station.id) return;
-
+                                        if (!station.id) return;
                                         const ok = window.confirm(
                                             `Delete "${station.name ?? 'this station'}"?`
                                         );
@@ -138,6 +143,13 @@ const UserStations = ({
                     </article>
                 ))}
             </div>
+
+            {openStationId && (
+                <StationReadingForm
+                    stationId={openStationId}
+                    onClose={() => setOpenStationId(null)}
+                />
+            )}
         </section>
     );
 };
