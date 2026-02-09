@@ -35,4 +35,25 @@ public class WeatherReadingController : BaseController
 
         return Ok(ApiResponse<WeatherReadingDto>.SuccessResponse(city));
     }
+
+    [HttpPost(Name = "CreateReading")]
+    public async Task<ActionResult<ApiResponse<WeatherReadingDto>>> Create([FromBody] CreateWeatherReadingRequest request)
+    {
+        if (!ModelState.IsValid)
+            throw new Exception(ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToString());
+
+        var station = await _service.CreateAsync(request);
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = station.Id },
+            station
+        );
+    }
+
+    [HttpDelete("{id}", Name = "DeleteReading")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _service.DeleteAsync(id);
+        return NoContent();
+    }
 }

@@ -8,8 +8,63 @@ namespace Weather.Application.Services;
 
 public class WeatherReadingService : GenericService<WeatherReading>, IWeatherReadingService
 {
-    public WeatherReadingService(IWeatherReadingRepository repo) : base(repo) { }
+    private readonly ICurrentUserService _currentUser;
+    private readonly IWeatherStationService _stationRepo;
 
+    public WeatherReadingService(IWeatherReadingRepository repo, ICurrentUserService currentUser, IWeatherStationService sr) : base(repo)
+    {
+        _currentUser = currentUser;
+        _stationRepo = sr;
+    }
+
+    public async Task<WeatherReadingDto> CreateAsync(CreateWeatherReadingRequest request)
+    {
+        var station = await _stationRepo.FindOneAsync(s => s.Id == request.StationId);
+        if (station == null)
+            throw new KeyNotFoundException("Station not found");
+
+        if(station.UserId != _currentUser.Id)
+            throw new UnauthorizedAccessException("Not allowed");
+        
+        var reading = new WeatherReading(
+            request.StationId,
+            request.MainCondition,
+            request.Description,
+            request.Icon,
+            request.Temperature,
+            request.FeelsLike,
+            request.MinTemp,
+            request.MaxTemp,
+            request.Pressure,
+            request.Humidity,
+            request.SeaLevel,
+            request.GroundLevel,
+            request.Visibility,
+            request.WindSpeed,
+            request.WindDeg,
+            request.Cloudiness,
+            request.Rain,
+            request.Snow,
+            request.CapturedAt
+        );
+
+        await _repo.AddAsync(reading);
+        return reading.ToDto();
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var options = new FindOptions<WeatherReading>();
+        options.Includes.Add(x => x.Station);
+
+        var reading = await _repo.FindOneAsync(x => x.Id == id, options)
+            ?? throw new KeyNotFoundException("WeatherReading not found");
+
+        if (reading.Station.UserId != _currentUser.Id)
+            throw new UnauthorizedAccessException("Not allowed");
+
+        await _repo.DeleteAsync(reading);
+    }
     public async Task<List<WeatherReadingDto>> QueryAsync(ReadingQuery? query = null)
     {
         query ??= new ReadingQuery();

@@ -113,6 +113,14 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         {
             return query;
         }
+        
+        if (options.Includes != null)
+        {
+            foreach (var include in options.Includes)
+            {
+                query = query.Include(include);
+            }
+        }
 
         // Order the FILTERED list
         if (options.OrderBy != null)

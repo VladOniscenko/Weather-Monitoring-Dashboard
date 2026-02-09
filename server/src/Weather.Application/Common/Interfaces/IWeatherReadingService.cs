@@ -7,4 +7,6 @@ public interface IWeatherReadingService : IGenericService<WeatherReading>
 {
     public Task<List<WeatherReadingDto>> QueryAsync(ReadingQuery? query = null);
     public Task<WeatherReadingDto?> FindOneDtoAsync(Expression<Func<WeatherReading, bool>> predicate);
+    public Task<WeatherReadingDto> CreateAsync(CreateWeatherReadingRequest request);
+    public Task DeleteAsync(Guid id);
 }
