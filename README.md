@@ -79,3 +79,10 @@ The entire ecosystem is containerized for seamless deployment:
 
 **Developed by Vlad**  
 *Building the bridge between hardware measurements and beautiful data.*
+
+---
+
+**IMAGES**
+![Global Weather Station Map](./client/public/map_view.png "Global Weather Station Network")
+![Global Weather Station Map](./client/public/profile_view.png "Global Weather Station Network")
+![Global Weather Station Map](./client/public/create_station_view.png "Global Weather Station Network")
