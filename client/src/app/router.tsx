@@ -5,11 +5,12 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { PublicOnlyRoute } from '@/components/PublicOnlyRoute';
 import { Logout } from '@/features/auth/components/Logout';
 import { Profile } from '@/features/profile/components';
+import HomePage from '@/components/layouts/Home/Home';
 
 export const AppRouter = () => {
     return (
         <Routes>
-            <Route path="/" element={<>Home</>} />
+            <Route path="/" element={<HomePage/>} />
 
             <Route element={<PublicOnlyRoute />}>
                 <Route
